@@ -2,7 +2,7 @@
 import {useEffect,useMemo,useState} from "react";
 import "./home.css";
 type Branch={id:string;name:string;slug:string;address:string};
-type Product={id:string;name:string;description:string|null;price:string;image_url:string|null};
+type Product={id:string;name:string;slug:string;description:string|null;price:string;image_url:string|null};
 type Mode="DELIVERY"|"PICKUP";
 const money=(v:string)=>"Gs. "+Number(v).toLocaleString("es-PY");
 
