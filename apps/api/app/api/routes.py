@@ -5,7 +5,11 @@ from app.models.core import Brand,Branch,Product,ProductBranchAvailability,Order
 from app.schemas.orders import OrderCreate
 from app.services.orders import create_order,OrderValidationError
 
-router=APIRouter()
+router=APIRouter(prefix="/api")
+
+@router.get("/health",tags=["system"])
+def health():
+    return {"status":"ok","service":"che-api","version":"0.1.0"}
 
 @router.get("/brands")
 def brands():
