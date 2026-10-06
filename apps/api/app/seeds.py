@@ -18,11 +18,23 @@ def run():
         branches=[get_or_create(db,Branch,slug,name=name,address=address,active=True) for name,slug,address in BRANCHES]
         category=get_or_create(db,Category,"bagels",brand_id=brands["che-bagels"].id,name="Bagels",sort_order=1,active=True)
 
-        # Los productos demo ya no se muestran en el ecommerce.
-        demo_slugs=("bagel-demo-clasico","bagel-demo-premium")
-        demo_rows=db.scalars(select(Product).where(Product.slug.in_(demo_slugs))).all()
-        for demo in demo_rows:
-            demo.active=False
+        # Conservamos los 2 productos demo porque ya tienen imágenes cargadas.
+        # Los nuevos productos salados se agregan alrededor sin mezclar Bakery ni dulces.
+        demo_products=[
+            ("Bagel Demo Clásico","bagel-demo-clasico",Decimal("35000"),"/images/products/bagel-clasico.png"),
+            ("Bagel Demo Premium","bagel-demo-premium",Decimal("45000"),"/images/products/bagel-premium.png"),
+        ]
+        for name,slug,price,image_url in demo_products:
+            demo=db.scalar(select(Product).where(Product.slug==slug))
+            if demo:
+                demo.name=name
+                demo.category_id=category.id
+                demo.price=price
+                demo.image_url=image_url
+                demo.active=True
+                for branch in branches:
+                    if not db.get(ProductBranchAvailability,(demo.id,branch.id)):
+                        db.add(ProductBranchAvailability(product_id=demo.id,branch_id=branch.id,available=True))
 
         # Menú salado de Che Bagels. Bakery y MET Café se mantienen en sus secciones.
         products=[
