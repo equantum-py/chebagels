@@ -62,3 +62,37 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
  .brandBands .brandBanner{border-radius:6px}
  .direct{padding:58px 20px}
 }
+
+
+/* Home polish v3 — product grid + banners */
+.catalog{max-width:1280px;padding:56px 24px 72px}
+.cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.foodCard{background:#fffaf0;border:1px solid #e4d3b6;border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.foodPic{height:auto;aspect-ratio:4/3;margin:0;border-radius:0;background:#ead7b7;overflow:hidden}
+.foodPic img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+.foodInfo{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1}
+.foodInfo h3{font-size:17px;line-height:1.2;margin:0 0 6px;font-weight:650}
+.foodInfo p{font-size:11px;line-height:1.35;min-height:30px;margin:0 0 15px;color:#756157}
+.foodAction{margin-top:auto}
+.foodAction button{width:34px;height:34px;padding:0;border-radius:50%;font-size:0;position:relative}
+.foodAction button:before{content:"+";font-size:22px;font-weight:400;line-height:1}
+.bannerCarousel{max-height:none;background:#f6e7c5}
+.bannerSlide picture{display:block;width:100%}
+.bannerSlide img{display:block;width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
+.brandBands{max-width:1280px;margin:0 auto 64px;padding:0 24px;gap:18px}
+.brandBands .brandBanner{border-radius:10px}
+.brandBanner img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
+@media(max-width:760px){
+ .catalog{padding:38px 12px 48px}
+ .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .foodPic{height:auto;aspect-ratio:1/1}
+ .foodInfo{padding:11px 10px 12px}
+ .foodInfo h3{font-size:14px}
+ .foodInfo p{font-size:10px;min-height:28px;margin-bottom:12px}
+ .foodAction strong{font-size:12px}
+ .foodAction button{width:30px;height:30px}
+ .foodAction button:before{font-size:20px}
+ .bannerSlide img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
+ .brandBands{margin:0 12px 48px;padding:0;gap:10px}
+ .brandBanner img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
+}
