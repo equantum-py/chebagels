@@ -1,75 +1,30 @@
 "use client";
-
-import { useEffect, useMemo, useState } from "react";
+import {useEffect,useMemo,useState} from "react";
 import "./home.css";
-
 type Branch={id:string;name:string;slug:string;address:string};
+type Product={id:string;name:string;description:string|null;price:string;image_url:string|null};
 type Mode="DELIVERY"|"PICKUP";
+const money=(v:string)=>"Gs. "+Number(v).toLocaleString("es-PY");
 
 export default function Home(){
-  const [branches,setBranches]=useState<Branch[]>([]);
-  const [branchId,setBranchId]=useState("");
-  const [mode,setMode]=useState<Mode>("DELIVERY");
-  const [loading,setLoading]=useState(true);
-  const [error,setError]=useState("");
-  const selected=useMemo(()=>branches.find(b=>b.id===branchId),[branches,branchId]);
-
-  useEffect(()=>{
-    fetch("/api/branches").then(r=>{if(!r.ok)throw new Error();return r.json()})
-      .then((data:Branch[])=>{setBranches(data);setBranchId(data[0]?.id??"")})
-      .catch(()=>setError("No pudimos cargar las sucursales."))
-      .finally(()=>setLoading(false));
-  },[]);
-
-  function continueOrder(){
-    if(!branchId)return;
-    localStorage.setItem("che_branch_id",branchId);
-    localStorage.setItem("che_order_type",mode);
-    window.location.href="/menu";
-  }
-
-  return <main className="shell">
-    <header className="topbar">
-      <div className="brandmark">CHE<span>.</span></div>
-      <div className="brandline">BAGELS <i>·</i> BAKERY <i>·</i> MET CAFÉ</div>
-    </header>
-
-    <section className="hero">
-      <div className="eyebrow">PEDÍ DIRECTO · FÁCIL · RÁPIDO</div>
-      <h1>¿Qué se te antoja<br/>hoy?</h1>
-      <p>Elegí tu sucursal y cómo querés recibir tu pedido. Nosotros nos encargamos del resto.</p>
-    </section>
-
-    <section className="orderCard">
-      <div className="step"><b>1</b><span>Elegí cómo querés tu pedido</span></div>
-      <div className="modes">
-        <button className={mode==="DELIVERY"?"mode active":"mode"} onClick={()=>setMode("DELIVERY")}>
-          <span className="modeIcon">⌂</span><strong>Delivery</strong><small>Te lo llevamos</small>
-        </button>
-        <button className={mode==="PICKUP"?"mode active":"mode"} onClick={()=>setMode("PICKUP")}>
-          <span className="modeIcon">▣</span><strong>Retiro</strong><small>Pasá a buscarlo</small>
-        </button>
-      </div>
-
-      <div className="step second"><b>2</b><span>Seleccioná tu sucursal</span></div>
-      {loading&&<div className="notice">Cargando sucursales…</div>}
-      {error&&<div className="notice error">{error}</div>}
-      {!loading&&!error&&<div className="branches">
-        {branches.map(branch=><button key={branch.id} className={branchId===branch.id?"branch selected":"branch"} onClick={()=>setBranchId(branch.id)}>
-          <span><strong>{branch.name}</strong><small>{branch.address}</small></span>
-          <span className="radio">{branchId===branch.id?"✓":""}</span>
-        </button>)}
-      </div>}
-
-      <button className="continue" disabled={!branchId||loading} onClick={continueOrder}>VER MENÚ <span>→</span></button>
-      {selected&&<p className="selection">Pedido para <b>{selected.name}</b> · {mode==="DELIVERY"?"Delivery":"Retiro"}</p>}
-    </section>
-
-    <section className="brands">
-      <div><strong>CHE BAGELS</strong><span>Bagels artesanales estilo New York</span></div>
-      <div><strong>CHE BAKERY</strong><span>Panadería & cosas ricas</span></div>
-      <div><strong>MET CAFÉ</strong><span>Café para acompañar</span></div>
-    </section>
-    <footer>Hecho para disfrutar. <b>CHE.</b></footer>
-  </main>
+ const [branches,setBranches]=useState<Branch[]>([]),[branchId,setBranchId]=useState(""),[mode,setMode]=useState<Mode>("DELIVERY");
+ const [products,setProducts]=useState<Product[]>([]),[locationOpen,setLocationOpen]=useState(false),[cart,setCart]=useState(0);
+ const selected=useMemo(()=>branches.find(x=>x.id===branchId),[branches,branchId]);
+ useEffect(()=>{fetch("/api/branches").then(r=>r.json()).then((d:Branch[])=>{setBranches(d);const saved=localStorage.getItem("che_branch_id");setBranchId(saved&&d.some(x=>x.id===saved)?saved:(d[0]?.id||""));});},[]);
+ useEffect(()=>{if(branchId){localStorage.setItem("che_branch_id",branchId);localStorage.setItem("che_order_type",mode);fetch("/api/menu?branch_id="+branchId).then(r=>r.json()).then(setProducts);}},[branchId,mode]);
+ return <main className="store">
+  <div className="promo">PEDÍ DIRECTO · DELIVERY Y RETIRO</div>
+  <header className="shopHeader"><a className="logo" href="/">CHE<span>.</span></a><nav><button onClick={()=>setLocationOpen(true)}>⌖ <span>{selected?.name||"Elegí sucursal"}</span></button><div className="fulfillment"><button className={mode==="DELIVERY"?"on":""} onClick={()=>setMode("DELIVERY")}>Delivery</button><button className={mode==="PICKUP"?"on":""} onClick={()=>setMode("PICKUP")}>Retiro</button></div></nav><button className="cartBtn">Mi pedido <b>{cart}</b></button></header>
+  <section className="foodHero"><div className="heroCopy"><span className="kicker">SOMOS CHE BAGELS</span><h1>Un poco de<br/>New York<br/><em>en Paraguay.</em></h1><p>Bagels artesanales hechos a mano. Elegí tus favoritos y pedí directo.</p><a href="#menu">VER MENÚ →</a></div><div className="heroVisual"><div className="bagelArt"><span>CHE</span><b>BAGELS</b><small>HECHOS A MANO</small></div></div></section>
+  <section className="quickCats"><a href="#menu"><b>🥯</b><span>Bagels</span></a><a href="#menu"><b>🔥</b><span>Más pedidos</span></a><a href="#menu"><b>🍟</b><span>Combos</span></a><a href="#bakery"><b>🥐</b><span>Bakery</span></a><a href="#cafe"><b>☕</b><span>Café</span></a><a href="#menu"><b>🥤</b><span>Bebidas</span></a></section>
+  <section className="catalog" id="menu"><div className="sectionTitle"><div><span>PARA MORDER, DISFRUTAR Y REPETIR</span><h2>Los más pedidos</h2></div><a href="/menu">Ver todo el menú →</a></div>
+   <div className="cards">{products.slice(0,6).map((x,i)=><article className="foodCard" key={x.id}><div className={"foodPic pic"+i}>{x.image_url?<img src={x.image_url} alt={x.name}/>:<><span>CHE.</span><small>Bagel artesanal</small></>}</div><div className="foodInfo"><h3>{x.name}</h3><p>{x.description||"Bagel artesanal preparado al momento con ingredientes frescos."}</p><div><strong>{money(x.price)}</strong><button onClick={()=>setCart(n=>n+1)} aria-label={"Agregar "+x.name}>+</button></div></div></article>)}</div>
+   {!products.length&&<div className="emptyMenu">Estamos preparando el menú de esta sucursal…</div>}
+  </section>
+  <section className="brandBands"><article id="bakery"><span>CHE BAKERY</span><h2>Algo rico<br/>siempre suma.</h2><p>Panadería y opciones para acompañar cualquier momento.</p><button>VER BAKERY</button></article><article id="cafe"><span>MET CAFÉ</span><h2>Tu café,<br/>a tu manera.</h2><p>Café y bebidas para completar tu pedido.</p><button>VER CAFÉ</button></article></section>
+  <section className="direct"><span>MENOS VUELTAS. MÁS CHE.</span><h2>Pedí directo.</h2><p>Elegí Delivery o Retiro, armá tu pedido y seguí su estado desde acá.</p><button onClick={()=>setLocationOpen(true)}>EMPEZAR PEDIDO →</button></section>
+  <footer className="shopFooter"><div className="logo">CHE<span>.</span></div><p>Che Bagels · Che Bakery · MET Café</p><small>Hecho para disfrutar.</small></footer>
+  {cart>0&&<button className="floatingCart">Ver mi pedido <span>{cart} {cart===1?"producto":"productos"}</span> →</button>}
+  {locationOpen&&<div className="modalBack" onClick={()=>setLocationOpen(false)}><section className="locationModal" onClick={e=>e.stopPropagation()}><button className="close" onClick={()=>setLocationOpen(false)}>×</button><span className="modalKicker">TU PEDIDO</span><h2>¿Dónde estás?</h2><p>Elegí la sucursal y cómo querés recibir tu pedido.</p><div className="modalModes"><button className={mode==="DELIVERY"?"active":""} onClick={()=>setMode("DELIVERY")}>Delivery</button><button className={mode==="PICKUP"?"active":""} onClick={()=>setMode("PICKUP")}>Retiro</button></div><div className="modalBranches">{branches.map(b=><button className={b.id===branchId?"active":""} key={b.id} onClick={()=>setBranchId(b.id)}><span><b>{b.name}</b><small>{b.address}</small></span><i>{b.id===branchId?"✓":""}</i></button>)}</div><button className="modalDone" onClick={()=>setLocationOpen(false)}>LISTO, VER MENÚ</button></section></div>}
+ </main>
 }
