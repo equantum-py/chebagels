@@ -1,0 +1,84 @@
+name: Che API CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  api-integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: che
+          POSTGRES_USER: che
+          POSTGRES_PASSWORD: che_demo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U che -d che"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    defaults:
+      run:
+        working-directory: apps/api
+
+    env:
+      APP_ENV: test
+      DATABASE_URL: postgresql+psycopg://che:che_demo@localhost:5432/che
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: apps/api/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Apply migrations
+        run: alembic upgrade head
+
+      - name: Load demo seeds
+        run: python -m app.seeds
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Start API
+        run: |
+          uvicorn app.main:app --host 127.0.0.1 --port 8000 > /tmp/che-api.log 2>&1 &
+          echo $! > /tmp/che-api.pid
+
+      - name: Wait for API
+        run: |
+          python - <<'PY'
+          import time
+          import httpx
+          for _ in range(30):
+              try:
+                  if httpx.get("http://127.0.0.1:8000/health", timeout=2).status_code == 200:
+                      raise SystemExit(0)
+              except Exception:
+                  pass
+              time.sleep(1)
+          raise SystemExit("API did not become ready")
+          PY
+
+      - name: Verify complete demo flow
+        run: python scripts/verify_demo_flow.py
+
+      - name: Show API log on failure
+        if: failure()
+        run: cat /tmp/che-api.log || true
