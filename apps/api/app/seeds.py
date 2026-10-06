@@ -17,15 +17,43 @@ def run():
         brands={slug:get_or_create(db,Brand,slug,name=name,active=True) for name,slug in BRANDS}
         branches=[get_or_create(db,Branch,slug,name=name,address=address,active=True) for name,slug,address in BRANCHES]
         category=get_or_create(db,Category,"bagels",brand_id=brands["che-bagels"].id,name="Bagels",sort_order=1,active=True)
+
+        # Los productos demo ya no se muestran en el ecommerce.
+        demo_slugs=("bagel-demo-clasico","bagel-demo-premium")
+        demo_rows=db.scalars(select(Product).where(Product.slug.in_(demo_slugs))).all()
+        for demo in demo_rows:
+            demo.active=False
+
+        # Menú salado de Che Bagels. Bakery y MET Café se mantienen en sus secciones.
         products=[
-            ("Bagel Demo Clásico","bagel-demo-clasico",Decimal("35000")),
-            ("Bagel Demo Premium","bagel-demo-premium",Decimal("45000")),
+            ("Jamón Serrano","jamon-serrano",Decimal("40000")),
+            ("Salmón","salmon",Decimal("45000")),
+            ("Mila","mila",Decimal("35000")),
+            ("Desmechado","desmechado",Decimal("40000")),
+            ("Pollo","pollo",Decimal("35000")),
+            ("Crunch de Pollo","crunch-de-pollo",Decimal("40000")),
+            ("Huevo y Panceta","huevo-y-panceta",Decimal("25000")),
+            ("Burger","burger",Decimal("40000")),
         ]
         for name,slug,price in products:
             product=db.scalar(select(Product).where(Product.brand_id==brands["che-bagels"].id,Product.slug==slug))
             if not product:
-                product=Product(id=uuid.uuid4(),brand_id=brands["che-bagels"].id,category_id=category.id,name=name,slug=slug,description="Producto de demostración",price=price,active=True)
+                product=Product(
+                    id=uuid.uuid4(),
+                    brand_id=brands["che-bagels"].id,
+                    category_id=category.id,
+                    name=name,
+                    slug=slug,
+                    description="Bagel artesanal salado de Che Bagels.",
+                    price=price,
+                    active=True,
+                )
                 db.add(product); db.flush()
+            else:
+                product.name=name
+                product.category_id=category.id
+                product.price=price
+                product.active=True
             for branch in branches:
                 key={"product_id":product.id,"branch_id":branch.id}
                 if not db.get(ProductBranchAvailability,(product.id,branch.id)):
