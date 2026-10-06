@@ -14,3 +14,51 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
 
 /* Bakery + MET Cafe responsive image banners */
 .brandBands{display:grid;grid-template-columns:1fr 1fr;background:#2c1512}.brandBands .brandBanner{display:block;min-width:0;overflow:hidden;background:transparent;padding:0}.brandBanner picture,.brandBanner img{display:block;width:100%;height:100%}.brandBanner img{aspect-ratio:1.92/1;object-fit:cover;transition:transform .35s ease}.brandBanner:hover img{transform:scale(1.015)}@media(max-width:760px){.brandBands{grid-template-columns:1fr}.brandBanner img{aspect-ratio:auto;width:100%;height:auto;object-fit:contain}.brandBanner:hover img{transform:none}}
+
+
+/* Auditoría UX/UI - mejoras comerciales */
+.bannerCarousel{max-height:400px}
+.bannerSlide img{height:clamp(320px,31.25vw,400px);aspect-ratio:auto;object-fit:cover}
+.quickCats{position:sticky;top:76px;margin:-18px auto 0;z-index:15}
+.catalog{padding-top:58px;padding-bottom:68px}
+.cards{gap:20px}
+.foodPic{height:250px}
+.foodInfo{padding:16px 18px 18px}
+.foodInfo p{margin:8px 0 14px}
+.foodAction{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.foodAction button{height:40px;border:0;border-radius:6px;background:#8f2428;color:#fffaf0;padding:0 17px;font-weight:700;cursor:pointer;white-space:nowrap}
+.foodAction button:hover{background:#742126}
+.catalogMore{display:block;width:max-content;margin:28px auto 0;color:#8f2428;font-weight:700;font-size:13px}
+.valueStrip{max-width:1180px;margin:0 auto 70px;padding:0 22px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.valueStrip article{display:flex;align-items:flex-start;gap:14px;padding:24px 28px;border-top:1px solid #ddc9a7;border-bottom:1px solid #ddc9a7}
+.valueStrip article+article{border-left:1px solid #ddc9a7}
+.valueStrip span{font-size:11px;font-weight:700;color:#8f2428;letter-spacing:1px}
+.valueStrip strong{font-size:15px;font-weight:700}
+.valueStrip p{margin:5px 0 0;color:#735e51;font-size:12px;line-height:1.45}
+.brandBands{max-width:1180px;margin:0 auto 78px;grid-template-columns:1fr 1fr;gap:20px;background:transparent}
+.brandBands .brandBanner{border-radius:8px;overflow:hidden}
+.brandBanner img{aspect-ratio:1.92/1}
+.direct{padding:76px 20px}
+.shopFooter{padding-top:32px;padding-bottom:32px}
+
+@media(max-width:760px){
+ .bannerCarousel{max-height:none}
+ .bannerSlide img{height:auto;aspect-ratio:4/5;object-fit:cover}
+ .quickCats{position:sticky;top:66px;margin:0;padding:10px 14px;background:#f6e7c5}
+ .catalog{padding:42px 14px 52px}
+ .sectionTitle{margin-bottom:22px}
+ .sectionTitle h2{font-size:36px}
+ .cards{gap:10px}
+ .foodPic{height:150px}
+ .foodInfo{padding:12px}
+ .foodInfo h3{font-size:16px}
+ .foodInfo p{min-height:38px;margin:7px 0 12px;font-size:11px}
+ .foodAction button{height:40px;padding:0 11px;font-size:11px}
+ .foodAction strong{font-size:13px}
+ .valueStrip{margin:0;padding:0 14px 45px;display:block}
+ .valueStrip article{padding:18px 4px;border-top:1px solid #ddc9a7;border-bottom:0}
+ .valueStrip article+article{border-left:0}
+ .brandBands{display:grid;margin:0 14px 52px;gap:10px}
+ .brandBands .brandBanner{border-radius:6px}
+ .direct{padding:58px 20px}
+}
