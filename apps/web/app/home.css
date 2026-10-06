@@ -96,3 +96,23 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
  .brandBands{margin:0 12px 48px;padding:0;gap:10px}
  .brandBanner img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
 }
+
+
+/* HOTFIX v4 — fuerza visual correcta sobre reglas heredadas */
+.catalog .cards{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:18px!important}
+.catalog .foodCard{background:#fffaf0!important;border:1px solid #dfcba9!important;border-radius:8px!important;overflow:hidden!important}
+.catalog .foodPic{height:auto!important;aspect-ratio:4/3!important;margin:0!important;border-radius:0!important;overflow:hidden!important}
+.catalog .foodPic img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+.catalog .foodInfo{padding:15px 16px 16px!important}
+.catalog .foodInfo h3{font-size:17px!important;margin:0 0 6px!important}
+.catalog .foodInfo p{font-size:11px!important;min-height:30px!important;margin:0 0 14px!important}
+.catalog .foodAction{display:flex!important;align-items:center!important;justify-content:space-between!important}
+.catalog .foodAction button{width:34px!important;height:34px!important;min-width:34px!important;padding:0!important;border-radius:50%!important;font-size:0!important;overflow:hidden!important;display:grid!important;place-items:center!important}
+.catalog .foodAction button::before{content:"+"!important;font-family:Arial,Helvetica,sans-serif!important;font-size:23px!important;font-weight:400!important;line-height:1!important;color:#fff!important}
+@media(max-width:760px){
+ .catalog .cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ .catalog .foodPic{aspect-ratio:1/1!important}
+ .catalog .foodInfo{padding:10px!important}
+ .catalog .foodInfo h3{font-size:14px!important}
+ .catalog .foodAction button{width:30px!important;height:30px!important;min-width:30px!important}
+}
