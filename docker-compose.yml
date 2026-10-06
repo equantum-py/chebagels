@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: che
+      POSTGRES_USER: che
+      POSTGRES_PASSWORD: che_demo
+    ports:
+      - "5432:5432"
+    volumes:
+      - che_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U che -d che"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./apps/api
+    environment:
+      APP_ENV: demo
+      DATABASE_URL: postgresql+psycopg://che:che_demo@db:5432/che
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["/app/docker-entrypoint.sh"]
+
+volumes:
+  che_postgres_data:
