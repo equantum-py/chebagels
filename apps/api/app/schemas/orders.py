@@ -8,6 +8,8 @@ class OrderItemCreate(BaseModel):
     product_id: uuid.UUID
     quantity: int=Field(gt=0,le=50)
     notes: str|None=Field(default=None,max_length=500)
+    client_line_key: str|None=Field(default=None,max_length=500)
+    parent_line_key: str|None=Field(default=None,max_length=500)
 
 class DeliveryAddressCreate(BaseModel):
     address_line: str=Field(min_length=3,max_length=500)
