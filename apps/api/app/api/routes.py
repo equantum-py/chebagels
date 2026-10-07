@@ -1,5 +1,5 @@
 from fastapi import APIRouter,HTTPException
-from sqlalchemy import select
+from sqlalchemy import select\nfrom sqlalchemy.orm import joinedload
 from app.db.session import SessionLocal
 from app.models.core import Brand,Branch,Category,Product,ProductBranchAvailability,Order
 from app.schemas.orders import OrderCreate
@@ -29,7 +29,7 @@ def menu(branch_id:str):
     try: bid=uuid.UUID(branch_id)
     except ValueError: raise HTTPException(400,"branch_id inválido")
     with SessionLocal() as db:
-        stmt=select(Product).join(ProductBranchAvailability,ProductBranchAvailability.product_id==Product.id).join(Category,Category.id==Product.category_id).where(Product.active.is_(True),ProductBranchAvailability.branch_id==bid,ProductBranchAvailability.available.is_(True)).order_by(Category.sort_order,Product.name)
+        stmt=select(Product).options(joinedload(Product.category)).join(ProductBranchAvailability,ProductBranchAvailability.product_id==Product.id).join(Category,Category.id==Product.category_id).where(Product.active.is_(True),ProductBranchAvailability.branch_id==bid,ProductBranchAvailability.available.is_(True)).order_by(Category.sort_order,Product.name)
         rows=db.scalars(stmt).all()
         return [{"id":str(x.id),"brand_id":str(x.brand_id),"category_id":str(x.category_id),"category_name":x.category.name if x.category else None,"category_slug":x.category.slug if x.category else None,"name":x.name,"slug":x.slug,"description":x.description,"price":str(x.price),"image_url":x.image_url} for x in rows]
 
