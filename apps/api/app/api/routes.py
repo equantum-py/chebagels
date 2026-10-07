@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from sqlalchemy.exc import ProgrammingError
 from sqlalchemy import select
 
 from app.db.session import SessionLocal
@@ -78,6 +79,11 @@ def post_order(payload: OrderCreate):
         except OrderValidationError as exc:
             db.rollback()
             raise HTTPException(422, str(exc))
+        except ProgrammingError as exc:
+            db.rollback()
+            if "parent_item_id" in str(exc):
+                raise HTTPException(503, "La base de datos necesita aplicar la migración operativa 0002_order_item_parent")
+            raise
 
 @router.get("/orders/{order_number}")
 def order(order_number: str):
