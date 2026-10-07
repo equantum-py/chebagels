@@ -28,14 +28,15 @@ const localProductImages:Record<string,string>={
 };
 
 export default function Home(){
- const [branches,setBranches]=useState<Branch[]>([]),[branchId,setBranchId]=useState(""),[mode,setMode]=useState<Mode>("DELIVERY");
+ const [branches,setBranches]=useState<Branch[]>([]),[branchId,setBranchId]=useState(""),[mode,setMode]=useState<Mode>("DELIVERY"),[modeReady,setModeReady]=useState(false);
  const [products,setProducts]=useState<Product[]>([]),[menuLoading,setMenuLoading]=useState(true),[locationOpen,setLocationOpen]=useState(false),[activeCat,setActiveCat]=useState("menu");
  const {count:cart,total:cartTotal,add:addToCart,openCart}=useCart();
  const catBarRef=useRef<HTMLElement|null>(null),locationCloseRef=useRef<HTMLButtonElement|null>(null);
  const selected=useMemo(()=>branches.find(x=>x.id===branchId),[branches,branchId]);
+ useEffect(()=>{const savedMode=localStorage.getItem("che_order_type");setMode(savedMode==="PICKUP"?"PICKUP":"DELIVERY");setModeReady(true)},[]);
  useEffect(()=>{fetch("/api/branches").then(r=>r.json()).then((d:Branch[])=>{setBranches(d);const saved=localStorage.getItem("che_branch_id");setBranchId(saved&&d.some(x=>x.id===saved)?saved:(d[0]?.id||""));});},[]);
  useEffect(()=>{if(branchId){localStorage.setItem("che_branch_id",branchId);setMenuLoading(true);fetch("/api/menu?branch_id="+branchId).then(r=>r.json()).then(setProducts).finally(()=>setMenuLoading(false));}},[branchId]);
- useEffect(()=>{localStorage.setItem("che_order_type",mode)},[mode]);
+ useEffect(()=>{if(modeReady)localStorage.setItem("che_order_type",mode)},[mode,modeReady]);
  useEffect(()=>{const active=catBarRef.current?.querySelector<HTMLAnchorElement>(`a[href="#${activeCat}"]`);active?.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"})},[activeCat]);
  useEffect(()=>{if(!locationOpen)return;locationCloseRef.current?.focus();const onKey=(e:KeyboardEvent)=>{if(e.key==="Escape")setLocationOpen(false)};document.addEventListener("keydown",onKey);return()=>document.removeEventListener("keydown",onKey)},[locationOpen]);
  useEffect(()=>{const ids=["menu","home-boxes","home-bagels-calientes","home-bagels-frios","home-papas-fritas","home-ensaladas","home-bebidas"];const update=()=>{const y=window.scrollY+150;if(window.scrollY<Math.max(80,(document.getElementById("menu")?.offsetTop||0)-150)){setActiveCat("menu");return}let current="menu";for(const id of ids){const el=document.getElementById(id);if(el&&el.offsetTop<=y)current=id}if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-40)current=ids[ids.length-1];setActiveCat(current)};update();window.addEventListener("scroll",update,{passive:true});return()=>window.removeEventListener("scroll",update)},[products]);
