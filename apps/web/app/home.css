@@ -135,3 +135,24 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
 @media(min-width:1600px){.staticHero{height:auto;max-height:none;background:#8f2428}.staticHero picture{max-width:1440px;margin:0 auto}.staticHero img{height:auto;min-height:0;aspect-ratio:2243/701;object-fit:contain}}
 @media(max-width:760px){.staticHero img{object-position:center 27%!important}.brandCrossSell .brandBanner img{width:100%;height:auto!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important}.menuSkeleton{min-height:920px}.skeletonCards{display:flex;overflow:hidden;gap:10px}.skeletonCard{flex:0 0 72vw;max-width:280px;height:360px;aspect-ratio:auto}.skeletonShare{height:500px;margin-top:46px}.catalogMore{min-height:44px;display:flex;align-items:center}.shareSection .homeCategoryHead{display:grid;grid-template-columns:1fr}.shareSection .homeCategoryHead a{width:max-content;min-height:44px;display:flex;align-items:center}.cartSummary{padding:14px 0 10px}.cartDrawer{padding-bottom:max(18px,env(safe-area-inset-bottom))}}
 @media(min-width:414px) and (max-width:760px){.staticHero img{object-position:center 24%!important}}
+
+
+/* Verification audit 8/10 — residual visual fixes */
+@media(max-width:389px){.staticHero img{object-position:center 28%!important}}
+@media(min-width:390px) and (max-width:413px){.staticHero img{object-position:center 27%!important}}
+@media(min-width:414px) and (max-width:760px){.staticHero img{object-position:center 26%!important}.homeCategory{scroll-margin-top:136px!important}}
+@media(max-width:413px){.homeCategory{scroll-margin-top:136px!important}}
+@media(min-width:761px) and (max-width:1099px){
+ .compactCategory .foodCard,.menuPage .menuCategory .foodCard{display:grid!important;grid-template-columns:minmax(0,1fr) 120px!important;min-height:130px!important;position:relative!important}
+ .compactCategory .foodPic,.menuPage .menuCategory .foodPic{grid-column:2!important;grid-row:1!important;width:120px!important;height:120px!important;min-height:120px!important;aspect-ratio:1/1!important;align-self:center!important}
+ .compactCategory .foodInfo,.menuPage .menuCategory .foodInfo{grid-column:1!important;grid-row:1!important;padding:14px!important;min-width:0!important}
+ .compactCategory .foodInfo h3,.menuPage .menuCategory .foodInfo h3{font-size:15px!important}
+ .compactCategory .foodInfo p,.menuPage .menuCategory .foodInfo p{min-height:0!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+ .compactCategory .foodAction button,.menuPage .menuCategory .foodAction button{position:absolute!important;right:8px!important;bottom:8px!important}
+ .compactCategory{margin-bottom:42px!important}
+ .fullCatalog .menuCategory+.menuCategory,.menuPage .menuCategory+.menuCategory{margin-top:44px!important}
+}
+@media(min-width:1100px){
+ .shopFooter{max-width:none!important;width:100%!important;margin:0!important;padding-left:max(24px,calc((100vw - 1280px)/2 + 24px))!important;padding-right:max(24px,calc((100vw - 1280px)/2 + 24px))!important}
+}
+.cartDrawer :focus-visible,.locationModal :focus-visible,.shopHeader :focus-visible,.quickCats a:focus-visible,.floatingCart:focus-visible{outline:3px solid #d68a4a;outline-offset:3px}
