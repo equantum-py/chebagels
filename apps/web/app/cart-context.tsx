@@ -12,7 +12,9 @@ export function CartProvider({children}:{children:React.ReactNode}){
  const [lines,setLines]=useState<CartLine[]>([]);
  const [ready,setReady]=useState(false);
  const [open,setOpen]=useState(false);
- const closeRef=useRef<HTMLButtonElement|null>(null);\n const drawerRef=useRef<HTMLElement|null>(null);\n const openerRef=useRef<HTMLElement|null>(null);
+ const closeRef=useRef<HTMLButtonElement|null>(null);
+ const drawerRef=useRef<HTMLElement|null>(null);
+ const openerRef=useRef<HTMLElement|null>(null);
  useEffect(()=>{try{const raw=localStorage.getItem("che_cart");if(raw)setLines(JSON.parse(raw));}catch{}setReady(true)},[]);
  useEffect(()=>{if(ready)localStorage.setItem("che_cart",JSON.stringify(lines))},[lines,ready]);
  useEffect(()=>{if(open)requestAnimationFrame(()=>closeRef.current?.focus())},[open]);
