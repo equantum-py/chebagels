@@ -116,3 +116,6 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
  .catalog .foodInfo h3{font-size:14px!important}
  .catalog .foodAction button{width:30px!important;height:30px!important;min-width:30px!important}
 }
+
+/* Complete categorized menu */
+.fullMenu{margin-top:72px;display:grid;gap:72px}.menuCategory{scroll-margin-top:150px}.categoryHeading{margin-bottom:24px;border-bottom:1px solid #d9c39e;padding-bottom:14px}.categoryHeading span{font-size:10px;letter-spacing:1.6px;font-weight:700;color:#8f2428}.categoryHeading h2{margin:6px 0 0;font-size:32px;line-height:1.1;font-weight:650;letter-spacing:-1px}.menuCategory .cards{grid-template-columns:repeat(4,minmax(0,1fr))!important}.menuCategory .foodPic small{max-width:90%;text-align:center}.quickCats{max-width:1280px!important}.quickCats a{min-width:auto!important;padding-left:18px!important;padding-right:18px!important}@media(max-width:760px){.fullMenu{margin-top:48px;gap:50px}.categoryHeading{margin-bottom:16px}.categoryHeading h2{font-size:27px}.menuCategory .cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}.menuCategory{scroll-margin-top:125px}}
