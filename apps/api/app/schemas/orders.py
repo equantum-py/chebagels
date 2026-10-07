@@ -30,10 +30,13 @@ class OrderCreate(BaseModel):
     @field_validator("customer_phone")
     @classmethod
     def valid_phone(cls,value:str):
+        value=value.strip()
+        if not re.fullmatch(r"[0-9+() -]{7,20}",value):
+            raise ValueError("Teléfono inválido")
         digits=re.sub(r"\D","",value)
         if len(digits)<7 or len(digits)>15:
             raise ValueError("Teléfono inválido")
-        return value.strip()
+        return value
 
     @field_validator("customer_email")
     @classmethod
