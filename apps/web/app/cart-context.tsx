@@ -9,6 +9,7 @@ type CartContextValue={lines:CartLine[];count:number;total:number;add:(product:C
 const CartContext=createContext<CartContextValue|null>(null);
 const money=(v:number)=>"Gs. "+v.toLocaleString("es-PY");
 const emptyForm:CheckoutForm={name:"",phone:"",email:"",address:"",reference:"",notes:""};
+const errorText=(detail:unknown,fallback:string)=>{if(typeof detail==="string")return detail;if(Array.isArray(detail)){const first=detail[0] as {msg?:string}|undefined;return first?.msg?.replace(/^Value error,\s*/,"")||fallback}return fallback};
 
 export function CartProvider({children}:{children:React.ReactNode}){
  const [lines,setLines]=useState<CartLine[]>([]);
@@ -48,7 +49,8 @@ export function CartProvider({children}:{children:React.ReactNode}){
   const orderType=localStorage.getItem("che_order_type")==="PICKUP"?"PICKUP":"DELIVERY";
   if(!branchId){setError("Elegí una sucursal antes de finalizar.");return}
   if(form.name.trim().length<2){setError("Ingresá tu nombre.");return}
-  if(form.phone.trim().length<5){setError("Ingresá un teléfono válido.");return}
+  if(!/^[0-9+() \\-]{7,20}$/.test(form.phone.trim())||form.phone.replace(/\\D/g,"").length<7){setError("Ingresá un teléfono válido.");return}
+  if(form.email.trim()&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.email.trim())){setError("Ingresá un email válido.");return}
   if(orderType==="DELIVERY"&&form.address.trim().length<3){setError("Ingresá la dirección de entrega.");return}
   submittingRef.current=true;setSubmitting(true);
   try{
@@ -56,7 +58,7 @@ export function CartProvider({children}:{children:React.ReactNode}){
    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);
    const response=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),signal:controller.signal});clearTimeout(timer);
    const data=await response.json().catch(()=>({}));
-   if(!response.ok)throw new Error(data.detail||"No pudimos crear el pedido.");
+   if(!response.ok)throw new Error(errorText(data.detail,"No pudimos crear el pedido."));
    setOrderNumber(data.order_number||"Pedido recibido");setConfirmedTotal(Number(data.total));localStorage.setItem("che_last_order",JSON.stringify({order_number:data.order_number,total:data.total,order_type:data.order_type}));
    clear();
    setForm(emptyForm);
@@ -74,7 +76,7 @@ export function CartProvider({children}:{children:React.ReactNode}){
   :checkout?<form className="checkoutForm" onSubmit={submitOrder}>
     <div className="checkoutMode"><span>{orderType==="PICKUP"?"Retiro en sucursal":"Delivery"}</span><button type="button" onClick={()=>setCheckout(false)}>Editar pedido</button></div>
     <label>Nombre y apellido<input required minLength={2} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} autoComplete="name"/></label>
-    <label>Teléfono<input required minLength={5} inputMode="tel" pattern="[0-9+() \\-]{7,20}" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} autoComplete="tel" placeholder="Ej: 0981 123 456"/></label>
+    <label>Teléfono<input required minLength={5} inputMode="tel" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} autoComplete="tel" placeholder="Ej: 0981 123 456"/></label>
     <label>Email <small>(opcional)</small><input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} autoComplete="email"/></label>
     {orderType==="DELIVERY"&&<><label>Dirección de entrega<input required minLength={3} value={form.address} onChange={e=>setForm({...form,address:e.target.value})} autoComplete="street-address"/></label><label>Referencia <small>(opcional)</small><input value={form.reference} onChange={e=>setForm({...form,reference:e.target.value})} placeholder="Casa, edificio, entre calles..."/></label></>}
     <label>Nota para el pedido <small>(opcional)</small><textarea rows={3} maxLength={1000} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/></label>
@@ -84,7 +86,7 @@ export function CartProvider({children}:{children:React.ReactNode}){
     <p className="checkoutNote">La sucursal confirmará disponibilidad y los siguientes pasos del pedido.</p>
    </form>
   :!lines.length?<div className="cartEmpty">Todavía no agregaste productos.</div>
-  :<><div className="cartBody"><div className="cartLines">{lines.map(line=><article className="cartLine" key={line.product.id}><div><h3>{line.product.name}</h3><strong>{money(Number(line.product.price)*line.quantity)}</strong></div><div className="qtyControl"><button onClick={()=>decrease(line.product.id)} aria-label={"Quitar una unidad de "+line.product.name}>−</button><b>{line.quantity}</b><button onClick={()=>add(line.product)} aria-label={"Agregar una unidad de "+line.product.name}>+</button></div><button className="removeLine" onClick={()=>remove(line.product.id)}>Quitar</button></article>)}</div></div><div className="cartFooter"><div className="cartSummary"><span>{count} {count===1?"producto":"productos"}</span><strong>{money(total)}</strong></div><button className="checkoutSoon" onClick={startCheckout}>Finalizar pedido</button></div></>}
+  :<>{error&&<p className="checkoutError cartAvailabilityError" role="alert">{error}</p>}<div className="cartBody"><div className="cartLines">{lines.map(line=><article className="cartLine" key={line.product.id}><div><h3>{line.product.name}</h3><strong>{money(Number(line.product.price)*line.quantity)}</strong></div><div className="qtyControl"><button onClick={()=>decrease(line.product.id)} aria-label={"Quitar una unidad de "+line.product.name}>−</button><b>{line.quantity}</b><button onClick={()=>add(line.product)} aria-label={"Agregar una unidad de "+line.product.name}>+</button></div><button className="removeLine" onClick={()=>remove(line.product.id)}>Quitar</button></article>)}</div></div><div className="cartFooter"><div className="cartSummary"><span>{count} {count===1?"producto":"productos"}</span><strong>{money(total)}</strong></div><button className="checkoutSoon" onClick={startCheckout}>Finalizar pedido</button></div></>}
  </aside></div>}</CartContext.Provider>
 }
 export function useCart(){const value=useContext(CartContext);if(!value)throw new Error("useCart debe usarse dentro de CartProvider");return value}
