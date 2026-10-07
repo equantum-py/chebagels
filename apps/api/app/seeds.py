@@ -23,6 +23,7 @@ def run():
             "papas": get_or_create(db,Category,"papas-fritas",brand_id=brands["che-bagels"].id,name="Papas fritas",sort_order=4,active=True),
             "ensaladas": get_or_create(db,Category,"ensaladas",brand_id=brands["che-bagels"].id,name="Ensaladas",sort_order=5,active=True),
             "bebidas": get_or_create(db,Category,"bebidas",brand_id=brands["che-bagels"].id,name="Bebidas",sort_order=6,active=True),
+            "boxes": get_or_create(db,Category,"boxes",brand_id=brands["che-bagels"].id,name="Boxes",sort_order=7,active=True),
         }
 
         # Menú oficial cargado desde las cartas compartidas por CHE Bagels.
@@ -58,6 +59,17 @@ def run():
             ("Plato Salmón","plato-salmon","100gr salmón (salmón, huevo revuelto, rúcula, queso crema, lechuga repollada, alcaparras, semilla sésamo).",80000,"ensaladas"),
             ("Plato Camarón","plato-camaron","Camarón, rúcula, queso crema, cebolla morada, tomate.",60000,"ensaladas"),
             ("César de Pollo","cesar-de-pollo","Pollo grillado, croutones de bagels, mayo de la casa, lechuga repollada, queso sardo.",50000,"ensaladas"),
+            # Boxes
+            ("Box Premium","box-premium","15 Mini Bagels: 5 Paté de Pollo, 5 Desme de Costilla y 5 Jamón y Morrones.",130000,"boxes"),
+            ("Box Mixto","box-mixto","15 Mini Bagels: 3 Salmón Ahumado, 3 Camarón al Ajillo, 3 Langostinos Apanados, 3 Burger y 3 Desmechados.",190000,"boxes"),
+            ("Box Milanesita","box-milanesita","15 Mini Bagels: 5 Mila Tradicional, 5 Mila con Jamón y Queso y 5 Mila Caramelizada.",180000,"boxes"),
+            ("Box Carnívoro","box-carnivoro","15 Mini Bagels: 5 Desmechado, 5 Burger y 5 Mila Bagel.",175000,"boxes"),
+            ("Box Marino","box-marino","15 Mini Bagels: 5 Camarón al Ajillo, 5 Langostinos Apanados y 5 Salmón Ahumado.",175000,"boxes"),
+            ("Box Pollo","box-pollo","15 Mini Bagels: Paté de Pollo, Crunchi de Pollo y Burger de Pollo.",140000,"boxes"),
+            ("Box Hamburguesita","box-hamburguesita","15 Mini Bagels: 5 American Burger, 5 Burger Mozza y 5 Burger J&Q.",190000,"boxes"),
+            ("Box Desmechado","box-desmechado","15 Mini Bagels: 5 Desmechado Clásico, 5 Desmechado Costilla y 5 Desmechado Napolitano.",190000,"boxes"),
+            ("Box Express","box-express","9 Mini Bagels: 2 Desme Costilla, 3 Caprese, 2 Crunchi y 2 Paté de Pollo.",80000,"boxes"),
+            ("Box 12 Mitades","box-12-mitades","12 unidades de bagels grandes: Desmechado Napolitano, Mila, Crunchi, Caprese, Paté de Pollo y Salame Milán.",150000,"boxes"),
             # Bebidas
             ("Gaseosa 500ml","gaseosa-500ml","Productos Coca-Cola.",10000,"bebidas"),
             ("Gaseosa 350ml","gaseosa-350ml","Productos Coca-Cola.",10000,"bebidas"),
