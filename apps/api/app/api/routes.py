@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
 
 from app.db.session import SessionLocal
-from app.models.core import Brand, Branch, Category, Product, ProductBranchAvailability, Order, OrderStatus
+from app.models.core import Brand, Branch, Category, Product, ProductBranchAvailability, Order, OrderItem, OrderStatus
 from app.schemas.orders import OrderCreate, OrderStatusUpdate
 from app.services.orders import create_order, OrderValidationError
 from app.services.operations import change_order_status, list_branch_orders, OrderOperationError
@@ -104,16 +104,30 @@ def operational_orders(branch_id: str, status: OrderStatus|None=None):
         raise HTTPException(400,"branch_id inválido")
     with SessionLocal() as db:
         rows=list_branch_orders(db,bid,status)
-        return [{
-            "id":str(row.id),
-            "order_number":row.order_number,
-            "branch_id":str(row.branch_id),
-            "order_type":row.order_type.value,
-            "status":row.status.value,
-            "source":row.source,
-            "total":str(row.total),
-            "created_at":row.created_at,
-        } for row in rows]
+        result=[]
+        for row in rows:
+            items=db.scalars(select(OrderItem).where(OrderItem.order_id==row.id).order_by(OrderItem.parent_item_id.asc().nullsfirst(),OrderItem.product_name)).all()
+            result.append({
+                "id":str(row.id),
+                "order_number":row.order_number,
+                "branch_id":str(row.branch_id),
+                "order_type":row.order_type.value,
+                "status":row.status.value,
+                "source":row.source,
+                "total":str(row.total),
+                "notes":row.notes,
+                "created_at":row.created_at,
+                "items":[{
+                    "id":str(item.id),
+                    "parent_item_id":str(item.parent_item_id) if item.parent_item_id else None,
+                    "product_name":item.product_name,
+                    "quantity":item.quantity,
+                    "unit_price":str(item.unit_price),
+                    "line_total":str(item.line_total),
+                    "notes":item.notes,
+                } for item in items],
+            })
+        return result
 
 @router.patch("/operations/orders/{order_number}/status")
 def operational_order_status(order_number: str,payload: OrderStatusUpdate):
