@@ -62,8 +62,13 @@ export function CartProvider({children}:{children:React.ReactNode}){
    setOrderNumber(data.order_number||"Pedido recibido");setConfirmedTotal(Number(data.total));localStorage.setItem("che_last_order",JSON.stringify({order_number:data.order_number,total:data.total,order_type:data.order_type}));
    clear();
    setForm(emptyForm);
-  }catch(err){setError(err instanceof Error?err.message:"No pudimos crear el pedido.")}
-  finally{setSubmitting(false)}
+  }catch(err){
+   const message=err instanceof Error?err.message:"";
+   if((err instanceof DOMException&&err.name==="AbortError")||message.toLowerCase().includes("aborted"))setError("El pedido está tardando demasiado. Intentá nuevamente.");
+   else if(err instanceof TypeError||message==="Failed to fetch")setError("No pudimos conectarnos. Revisá tu conexión e intentá nuevamente.");
+   else setError(message||"No pudimos crear el pedido.");
+  }
+  finally{submittingRef.current=false;setSubmitting(false)}
  };
  const closeCart=()=>{setOpen(false);setCheckout(false);setError("");if(orderNumber)setOrderNumber("")};
  const value=useMemo(()=>({lines,count,total,add,decrease,remove,clear,openCart:()=>{openerRef.current=document.activeElement as HTMLElement;setCheckout(false);setError("");setOrderNumber("");setOpen(true)}}),[lines,count,total]);
