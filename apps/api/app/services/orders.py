@@ -32,8 +32,13 @@ def create_order(db:Session,data:OrderCreate)->Order:
     total=subtotal+delivery_fee
     order=Order(id=uuid.uuid4(),order_number=f"CH-{uuid.uuid4().hex[:8].upper()}",branch_id=data.branch_id,customer_id=customer.id,address_id=address.id if address else None,order_type=data.order_type,status=OrderStatus.RECEIVED,source="WEB",subtotal=subtotal,delivery_fee=delivery_fee,total=total,notes=data.notes)
     db.add(order); db.flush()
+    item_ids={requested.client_line_key:uuid.uuid4() for _,requested,_ in item_rows if requested.client_line_key}
     for product,requested,line_total in item_rows:
-        db.add(OrderItem(id=uuid.uuid4(),order_id=order.id,product_id=product.id,product_name=product.name,quantity=requested.quantity,unit_price=product.price,line_total=line_total,notes=requested.notes))
+        item_id=item_ids.get(requested.client_line_key,uuid.uuid4())
+        parent_item_id=item_ids.get(requested.parent_line_key) if requested.parent_line_key else None
+        if requested.parent_line_key and parent_item_id is None:
+            raise OrderValidationError("La configuración del producto no es válida")
+        db.add(OrderItem(id=item_id,order_id=order.id,parent_item_id=parent_item_id,product_id=product.id,product_name=product.name,quantity=requested.quantity,unit_price=product.price,line_total=line_total,notes=requested.notes))
     db.add(OrderStatusHistory(id=uuid.uuid4(),order_id=order.id,status=OrderStatus.RECEIVED,note="Pedido creado desde ecommerce"))
     db.commit(); db.refresh(order)
     return order
