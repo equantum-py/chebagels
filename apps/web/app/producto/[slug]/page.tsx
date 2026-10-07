@@ -11,7 +11,7 @@ export default function ProductPage(){
  const {add,count,total,openCart}=useCart();
  useEffect(()=>{(async()=>{try{const branches=await fetch("/api/branches").then(r=>r.json());const saved=localStorage.getItem("che_branch_id");const branch=saved&&branches.some((x:{id:string})=>x.id===saved)?saved:(branches[0]?.id||"");if(branch){localStorage.setItem("che_branch_id",branch);setItems(await fetch("/api/menu?branch_id="+branch).then(r=>r.json()))}}finally{setLoading(false)}})()},[]);
  const product=items.find(x=>x.slug===slug),sides=useMemo(()=>items.filter(x=>x.category_slug==="papas-fritas"),[items]),drinks=useMemo(()=>items.filter(x=>x.category_slug==="bebidas"),[items]);
- const selections=useMemo(()=>{const out:CartSelection[]=[];const s=sides.find(x=>x.id===side),d=drinks.find(x=>x.id===drink);if(s)out.push({key:"side:"+s.id,label:s.name,price:Number(s.price)});if(d)out.push({key:"drink:"+d.id,label:d.name,price:Number(d.price)});return out},[side,drink,sides,drinks]);
+ const selections=useMemo(()=>{const out:CartSelection[]=[];const s=sides.find(x=>x.id===side),d=drinks.find(x=>x.id===drink);if(s)out.push({key:"side:"+s.id,productId:s.id,label:s.name,price:Number(s.price)});if(d)out.push({key:"drink:"+d.id,productId:d.id,label:d.name,price:Number(d.price)});return out},[side,drink,sides,drinks]);
  const unit=product?Number(product.price)+selections.reduce((n,x)=>n+x.price,0):0;
  if(loading)return <main className="productPage"><div className="productLoading">Cargando producto…</div></main>;
  if(!product)return <main className="productPage"><div className="productMissing"><h1>Producto no disponible</h1><p>Este producto no está disponible en la sucursal seleccionada.</p><a href="/menu">← Volver al menú</a></div></main>;
