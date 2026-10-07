@@ -2,9 +2,10 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import select
 
 from app.db.session import SessionLocal
-from app.models.core import Brand, Branch, Category, Product, ProductBranchAvailability, Order
-from app.schemas.orders import OrderCreate
+from app.models.core import Brand, Branch, Category, Product, ProductBranchAvailability, Order, OrderStatus
+from app.schemas.orders import OrderCreate, OrderStatusUpdate
 from app.services.orders import create_order, OrderValidationError
+from app.services.operations import change_order_status, list_branch_orders, OrderOperationError
 
 router = APIRouter(prefix="/api")
 
@@ -91,4 +92,44 @@ def order(order_number: str):
             "order_type": row.order_type.value,
             "total": str(row.total),
             "created_at": row.created_at,
+        }
+
+
+@router.get("/operations/branches/{branch_id}/orders")
+def operational_orders(branch_id: str, status: OrderStatus|None=None):
+    import uuid
+    try:
+        bid=uuid.UUID(branch_id)
+    except ValueError:
+        raise HTTPException(400,"branch_id inválido")
+    with SessionLocal() as db:
+        rows=list_branch_orders(db,bid,status)
+        return [{
+            "id":str(row.id),
+            "order_number":row.order_number,
+            "branch_id":str(row.branch_id),
+            "order_type":row.order_type.value,
+            "status":row.status.value,
+            "source":row.source,
+            "total":str(row.total),
+            "created_at":row.created_at,
+        } for row in rows]
+
+@router.patch("/operations/orders/{order_number}/status")
+def operational_order_status(order_number: str,payload: OrderStatusUpdate):
+    with SessionLocal() as db:
+        row=db.scalar(select(Order).where(Order.order_number==order_number))
+        if not row:
+            raise HTTPException(404,"Pedido no encontrado")
+        try:
+            row=change_order_status(db,row,payload.status,payload.changed_by_user_id,payload.note)
+        except OrderOperationError as exc:
+            db.rollback()
+            raise HTTPException(409,str(exc))
+        return {
+            "id":str(row.id),
+            "order_number":row.order_number,
+            "order_type":row.order_type.value,
+            "status":row.status.value,
+            "updated_at":row.updated_at,
         }
