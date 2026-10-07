@@ -49,8 +49,8 @@ export function CartProvider({children}:{children:React.ReactNode}){
   const orderType=localStorage.getItem("che_order_type")==="PICKUP"?"PICKUP":"DELIVERY";
   if(!branchId){setError("Elegí una sucursal antes de finalizar.");return}
   if(form.name.trim().length<2){setError("Ingresá tu nombre.");return}
-  if(!/^[0-9+() \\-]{7,20}$/.test(form.phone.trim())||form.phone.replace(/\\D/g,"").length<7){setError("Ingresá un teléfono válido.");return}
-  if(form.email.trim()&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.email.trim())){setError("Ingresá un email válido.");return}
+  if(!/^[0-9+() -]{7,20}$/.test(form.phone.trim())||form.phone.replace(/\D/g,"").length<7){setError("Ingresá un teléfono válido.");return}
+  if(form.email.trim()&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())){setError("Ingresá un email válido.");return}
   if(orderType==="DELIVERY"&&form.address.trim().length<3){setError("Ingresá la dirección de entrega.");return}
   submittingRef.current=true;setSubmitting(true);
   try{
