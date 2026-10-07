@@ -5,6 +5,7 @@ type Branch={id:string;name:string;slug:string;address:string};
 type Product={id:string;name:string;slug:string;description:string|null;price:string;image_url:string|null;category_name?:string|null;category_slug?:string|null};
 type Mode="DELIVERY"|"PICKUP";
 const money=(v:string)=>"Gs. "+Number(v).toLocaleString("es-PY");
+const FEATURED_SLUGS=["american-burger","crunchi-de-pollo","desmechado-clasico","mila-bagel","bec-bacon-egg-cheese","salmon-ahumado","milano","pate-de-pollo"];
 const localProductImages:Record<string,string>={
  "bagel-demo-clasico":"/images/products/bagel-clasico.png",
  "bagel-demo-premium":"/images/products/bagel-premium.png",
@@ -12,6 +13,10 @@ const localProductImages:Record<string,string>={
  "crunch-de-pollo":"/images/products/bagel-crunch-pollo.png",
  "desmechado":"/images/products/bagel-desmechado.png",
  "huevo-y-panceta":"/images/products/bagel-huevo-panceta.png",
+ "american-burger":"/images/products/bagel-burger.png",
+ "crunchi-de-pollo":"/images/products/bagel-crunch-pollo.png",
+ "desmechado-clasico":"/images/products/bagel-desmechado.png",
+ "bec-bacon-egg-cheese":"/images/products/bagel-huevo-panceta.png",
 };
 
 export default function Home(){
@@ -25,11 +30,11 @@ export default function Home(){
   <div className="promo">PEDÍ DIRECTO · DELIVERY Y RETIRO</div>
   <header className="shopHeader"><a className="logo" href="/" aria-label="Che Bagels"><img src="/images/che-bagels-logo.png" alt="Che Bagels"/></a><nav><button onClick={()=>setLocationOpen(true)}>⌖ <span>{selected?.name||"Elegí sucursal"}</span></button><div className="fulfillment"><button className={mode==="DELIVERY"?"on":""} onClick={()=>setMode("DELIVERY")}>Delivery</button><button className={mode==="PICKUP"?"on":""} onClick={()=>setMode("PICKUP")}>Retiro</button></div></nav><button className="cartBtn">Mi pedido <b>{cart}</b></button></header>
   <section className="bannerCarousel" aria-label="Promociones"><div className="bannerTrack" style={{transform:`translateX(-${banner*100}%)`}}><a className="bannerSlide" href="#menu"><picture><source media="(max-width: 760px)" srcSet="/images/banners/che-hero-mobile.png"/><img src="/images/banners/che-hero-desktop.png" alt="Che Bagels - Pedí directo"/></picture></a><a className="bannerSlide" href="#menu"><picture><source media="(max-width: 760px)" srcSet="/images/banners/che-happy-hour-mobile.png"/><img src="/images/banners/che-happy-hour-desktop.png" alt="Che Bagels Happy Hour 2x1"/></picture></a></div><button className="bannerArrow prev" onClick={()=>setBanner(n=>(n+1)%2)} aria-label="Banner anterior">‹</button><button className="bannerArrow next" onClick={()=>setBanner(n=>(n+1)%2)} aria-label="Banner siguiente">›</button><div className="bannerDots">{[0,1].map(n=><button key={n} className={banner===n?"active":""} onClick={()=>setBanner(n)} aria-label={`Ver banner ${n+1}`}></button>)}</div></section>
-  <section className="quickCats" aria-label="Categorías"><a className="active" href="#menu"><span>Más pedidos</span></a><a href="#bagels-calientes"><span>Calientes</span></a><a href="#bagels-frios"><span>Fríos</span></a><a href="#tablas"><span>Tablas</span></a><a href="#boxes"><span>Boxes</span></a><a href="#papas-fritas"><span>Papas</span></a><a href="#ensaladas"><span>Ensaladas</span></a><a href="#bebidas"><span>Bebidas</span></a></section>
-  <section className="catalog" id="menu"><div className="sectionTitle"><div><span>PARA MORDER, DISFRUTAR Y REPETIR</span><h2>Los más pedidos</h2></div></div>
-   <div className="cards">{products.filter(x=>["bagels-calientes","bagels-frios"].includes(x.category_slug||"")).slice(0,8).map((x,i)=>{const imageSrc=x.image_url||localProductImages[x.slug]||null;return <article className="foodCard" key={x.id}><div className={"foodPic pic"+i}>{imageSrc?<img src={imageSrc} alt={x.name}/>:<><span>CHE.</span><small>Bagel artesanal</small></>}</div><div className="foodInfo"><h3>{x.name}</h3><p>{x.description||"Preparado al momento con ingredientes frescos."}</p><div className="foodAction"><strong>{money(x.price)}</strong><button onClick={()=>setCart(n=>n+1)} aria-label={"Agregar "+x.name}>Agregar</button></div></div></article>})}</div>
+  <section className="quickCats" aria-label="Categorías"><a className="active" href="#menu"><span>Más pedidos</span></a><a href="/menu#bagels-calientes"><span>Calientes</span></a><a href="/menu#bagels-frios"><span>Fríos</span></a><a href="/menu#tablas"><span>Tablas</span></a><a href="/menu#boxes"><span>Boxes</span></a><a href="/menu#papas-fritas"><span>Papas</span></a><a href="/menu#ensaladas"><span>Ensaladas</span></a><a href="/menu#bebidas"><span>Bebidas</span></a></section>
+  <section className="catalog" id="menu"><div className="sectionTitle"><div><span>PARA MORDER, DISFRUTAR Y REPETIR</span><h2>Los más pedidos</h2></div><a href="/menu">Ver todo el menú →</a></div>
+   <div className="cards">{FEATURED_SLUGS.map(slug=>products.find(x=>x.slug===slug)).filter((x):x is Product=>Boolean(x)).map((x,i)=>{const imageSrc=x.image_url||localProductImages[x.slug]||null;return <article className="foodCard" key={x.id}><div className={"foodPic pic"+i}>{imageSrc?<img src={imageSrc} alt={x.name}/>:<><span>CHE.</span><small>Bagel artesanal</small></>}</div><div className="foodInfo"><h3>{x.name}</h3><p>{x.description||"Preparado al momento con ingredientes frescos."}</p><div className="foodAction"><strong>{money(x.price)}</strong><button onClick={()=>setCart(n=>n+1)} aria-label={"Agregar "+x.name}>Agregar</button></div></div></article>})}</div>
    {!products.length&&<div className="emptyMenu">Estamos preparando el menú de esta sucursal…</div>}
-   <div className="fullMenu">{Array.from(new Map(products.map(x=>[x.category_slug||"otros",x.category_name||"Otros"]))).map(([slug,name])=><section className="menuCategory" id={slug} key={slug}><div className="categoryHeading"><span>MENÚ CHE BAGELS</span><h2>{name}</h2></div><div className="cards">{products.filter(x=>(x.category_slug||"otros")===slug).map((x,i)=>{const imageSrc=x.image_url||localProductImages[x.slug]||null;return <article className="foodCard" key={x.id}><div className={"foodPic pic"+i}>{imageSrc?<img src={imageSrc} alt={x.name}/>:<><span>CHE.</span><small>{name}</small></>}</div><div className="foodInfo"><h3>{x.name}</h3><p>{x.description||"Preparado al momento con ingredientes frescos."}</p><div className="foodAction"><strong>{money(x.price)}</strong><button onClick={()=>setCart(n=>n+1)} aria-label={"Agregar "+x.name}>Agregar</button></div></div></article>})}</div></section>)}</div>
+   <a className="catalogMore" href="/menu">VER TODO EL MENÚ →</a>
   </section>
   <section className="valueStrip" aria-label="Por qué pedir en Che Bagels">
    <article><span>01</span><div><strong>Bagels hechos a mano</strong><p>Preparados para disfrutar en el momento.</p></div></article>
