@@ -2,7 +2,7 @@ import re
 import uuid
 from decimal import Decimal
 from pydantic import BaseModel,Field,field_validator
-from app.models.core import OrderType
+from app.models.core import OrderStatus,OrderType
 
 class OrderItemCreate(BaseModel):
     product_id: uuid.UUID
@@ -49,3 +49,9 @@ class OrderCreate(BaseModel):
         if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+",value):
             raise ValueError("Email inválido")
         return value
+
+
+class OrderStatusUpdate(BaseModel):
+    status: OrderStatus
+    changed_by_user_id: uuid.UUID|None=None
+    note: str|None=Field(default=None,max_length=500)
