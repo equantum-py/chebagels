@@ -19,6 +19,8 @@ export function CartProvider({children}:{children:React.ReactNode}){
  const [submitting,setSubmitting]=useState(false);
  const [error,setError]=useState("");
  const [orderNumber,setOrderNumber]=useState("");
+ const [confirmedTotal,setConfirmedTotal]=useState<number|null>(null);
+ const submittingRef=useRef(false);
  const closeRef=useRef<HTMLButtonElement|null>(null);
  const drawerRef=useRef<HTMLElement|null>(null);
  const openerRef=useRef<HTMLElement|null>(null);
@@ -35,22 +37,27 @@ export function CartProvider({children}:{children:React.ReactNode}){
  const count=lines.reduce((n,x)=>n+x.quantity,0);
  const total=lines.reduce((n,x)=>n+Number(x.product.price)*x.quantity,0);
 
- const startCheckout=()=>{setError("");setOrderNumber("");setCheckout(true)};
+ const startCheckout=async()=>{setError("");setOrderNumber("");
+  const branchId=localStorage.getItem("che_branch_id")||"";
+  if(branchId){try{const fresh:CartProduct[]=await fetch("/api/menu?branch_id="+branchId).then(r=>r.json());const map=new Map(fresh.map(x=>[x.id,x]));const missing=lines.find(x=>!map.has(x.product.id));if(missing){setError(missing.product.name+" ya no está disponible en esta sucursal. Quitalo del pedido para continuar.");return}setLines(current=>current.map(x=>({...x,product:{...x.product,price:map.get(x.product.id)!.price}})))}catch{setError("No pudimos actualizar precios y disponibilidad. Intentá nuevamente.");return}}
+  setCheckout(true)
+ };
  const submitOrder=async(e:React.FormEvent)=>{
-  e.preventDefault();setError("");
+  e.preventDefault();setError("");if(submittingRef.current)return;
   const branchId=localStorage.getItem("che_branch_id")||"";
   const orderType=localStorage.getItem("che_order_type")==="PICKUP"?"PICKUP":"DELIVERY";
   if(!branchId){setError("Elegí una sucursal antes de finalizar.");return}
   if(form.name.trim().length<2){setError("Ingresá tu nombre.");return}
   if(form.phone.trim().length<5){setError("Ingresá un teléfono válido.");return}
   if(orderType==="DELIVERY"&&form.address.trim().length<3){setError("Ingresá la dirección de entrega.");return}
-  setSubmitting(true);
+  submittingRef.current=true;setSubmitting(true);
   try{
    const payload={branch_id:branchId,order_type:orderType,customer_name:form.name.trim(),customer_phone:form.phone.trim(),customer_email:form.email.trim()||null,address:orderType==="DELIVERY"?{address_line:form.address.trim(),reference:form.reference.trim()||null}:null,items:lines.map(x=>({product_id:x.product.id,quantity:x.quantity})),notes:form.notes.trim()||null};
-   const response=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),15000);
+   const response=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),signal:controller.signal});clearTimeout(timer);
    const data=await response.json().catch(()=>({}));
    if(!response.ok)throw new Error(data.detail||"No pudimos crear el pedido.");
-   setOrderNumber(data.order_number||"Pedido recibido");
+   setOrderNumber(data.order_number||"Pedido recibido");setConfirmedTotal(Number(data.total));localStorage.setItem("che_last_order",JSON.stringify({order_number:data.order_number,total:data.total,order_type:data.order_type}));
    clear();
    setForm(emptyForm);
   }catch(err){setError(err instanceof Error?err.message:"No pudimos crear el pedido.")}
@@ -63,14 +70,14 @@ export function CartProvider({children}:{children:React.ReactNode}){
 
  return <CartContext.Provider value={value}>{children}{open&&<div className="cartOverlay" onMouseDown={closeCart}><aside ref={drawerRef} className="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" onMouseDown={e=>e.stopPropagation()}>
   <div className="cartDrawerHead"><div><span>{checkout?"FINALIZAR PEDIDO":"TU PEDIDO"}</span><h2 id="cart-title">{orderNumber?"Pedido recibido":checkout?"Tus datos":"Mi pedido"}</h2></div><button ref={closeRef} className="cartClose" onClick={closeCart} aria-label="Cerrar pedido">×</button></div>
-  {orderNumber?<div className="orderSuccess"><b>✓</b><h3>¡Recibimos tu pedido!</h3><p>Tu número es <strong>{orderNumber}</strong>.</p><p>El pedido quedó registrado y será confirmado por la sucursal.</p><button onClick={closeCart}>VOLVER AL MENÚ</button></div>
+  {orderNumber?<div className="orderSuccess"><b>✓</b><h3>¡Recibimos tu pedido!</h3><p>Tu número es <strong>{orderNumber}</strong>.</p>{confirmedTotal!==null&&<p>Total confirmado: <strong>{money(confirmedTotal)}</strong></p>}<p>El pedido quedó registrado y será confirmado por la sucursal.</p><button onClick={closeCart}>VOLVER AL MENÚ</button></div>
   :checkout?<form className="checkoutForm" onSubmit={submitOrder}>
     <div className="checkoutMode"><span>{orderType==="PICKUP"?"Retiro en sucursal":"Delivery"}</span><button type="button" onClick={()=>setCheckout(false)}>Editar pedido</button></div>
     <label>Nombre y apellido<input required minLength={2} value={form.name} onChange={e=>setForm({...form,name:e.target.value})} autoComplete="name"/></label>
-    <label>Teléfono<input required minLength={5} inputMode="tel" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} autoComplete="tel" placeholder="Ej: 0981 123 456"/></label>
+    <label>Teléfono<input required minLength={5} inputMode="tel" pattern="[0-9+() \\-]{7,20}" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} autoComplete="tel" placeholder="Ej: 0981 123 456"/></label>
     <label>Email <small>(opcional)</small><input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} autoComplete="email"/></label>
     {orderType==="DELIVERY"&&<><label>Dirección de entrega<input required minLength={3} value={form.address} onChange={e=>setForm({...form,address:e.target.value})} autoComplete="street-address"/></label><label>Referencia <small>(opcional)</small><input value={form.reference} onChange={e=>setForm({...form,reference:e.target.value})} placeholder="Casa, edificio, entre calles..."/></label></>}
-    <label>Nota para el pedido <small>(opcional)</small><textarea rows={3} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/></label>
+    <label>Nota para el pedido <small>(opcional)</small><textarea rows={3} maxLength={1000} value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})}/></label>
     <div className="checkoutTotal"><span>Total del pedido</span><strong>{money(total)}</strong></div>
     {error&&<p className="checkoutError" role="alert">{error}</p>}
     <button className="checkoutSubmit" type="submit" disabled={submitting}>{submitting?"ENVIANDO PEDIDO...":"CONFIRMAR PEDIDO"}</button>
