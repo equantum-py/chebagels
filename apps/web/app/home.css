@@ -201,3 +201,14 @@ body{font-family:var(--che-font)}
 .foodInfo p{line-height:1.45}
 .clubPointsEstimate{font-weight:600}
 @media(max-width:600px){.heroCopy h1{letter-spacing:-.035em}.sectionTitle h2{font-size:clamp(29px,8vw,40px)}.foodInfo h3{font-size:14px}}
+
+/* QA polish: quiet points and branded missing-photo states */
+.store .foodCard .clubPointsEstimate{font-weight:400!important;color:#86756d!important;font-size:11px!important;line-height:1.4!important;margin:4px 0 8px!important}
+.store .foodCard .clubPointsEstimate small{color:#a5968b!important;font-size:10px!important}
+.store .foodCard .foodInfo{display:flex;flex-direction:column;flex:1;min-height:0}
+.store .foodCard .foodAction{margin-top:auto}
+.cheProductPlaceholder{width:100%;height:100%;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;padding:22px;background:linear-gradient(145deg,#fff9f0 0%,#eee1d1 100%);color:#8f2428}
+.chePlaceholderLogo{display:block;font-size:clamp(28px,3vw,43px);font-weight:900;letter-spacing:-.08em;line-height:1}
+.chePlaceholderName{display:block;max-width:190px;color:#4b3029;font-size:14px;font-weight:800;line-height:1.25}
+.cheProductPlaceholder small{color:#80685d;font-size:11px}
+@media(max-width:600px){.cheProductPlaceholder{min-height:145px;padding:14px;gap:6px}.chePlaceholderName{font-size:12px}.store .foodCard .clubPointsEstimate{font-size:10px!important}}
