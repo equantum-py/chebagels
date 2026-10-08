@@ -2,6 +2,17 @@
 import {useEffect,useMemo,useRef,useState} from "react";
 import {useCart} from "./cart-context";
 type Branch={id:string;name:string;slug:string;address:string};
+const branchDisplay=(branch:Branch):Branch=>{
+ const details:Record<string,{name:string;address:string}>={
+  "sucursal-1":{name:"Recoleta",address:"Teniente Zotti, Asunción"},
+  "sucursal-2":{name:"Las Lomas",address:"PCGC+28M, Asunción"},
+  "ciudad-del-este":{name:"Ciudad del Este",address:"F9GG+CXP, Ciudad del Este"},
+  "san-vicente":{name:"San Vicente",address:"San Vicente, Asunción · dirección exacta pendiente"}
+ };
+ return {...branch,...(details[branch.slug]||{})};
+};
+const plannedBranches=[{name:"Ciudad del Este",address:"F9GG+CXP, Ciudad del Este",slug:"ciudad-del-este"},{name:"San Vicente",address:"San Vicente, Asunción · dirección exacta pendiente",slug:"san-vicente"}];
+
 type Product={id:string;name:string;slug:string;description:string|null;price:string;image_url:string|null;category_name?:string|null;category_slug?:string|null};
 type Mode="DELIVERY"|"PICKUP";
 const money=(v:string)=>"Gs. "+Number(v).toLocaleString("es-PY");
@@ -35,7 +46,7 @@ export default function Home(){
  const catBarRef=useRef<HTMLElement|null>(null),locationCloseRef=useRef<HTMLButtonElement|null>(null);
  const selected=useMemo(()=>branches.find(x=>x.id===branchId),[branches,branchId]);
  useEffect(()=>{const savedMode=localStorage.getItem("che_order_type");setMode(savedMode==="PICKUP"?"PICKUP":"DELIVERY");setModeReady(true)},[]);
- useEffect(()=>{fetch("/api/branches").then(r=>r.json()).then((d:Branch[])=>{setBranches(d);const saved=localStorage.getItem("che_branch_id");setBranchId(saved&&d.some(x=>x.id===saved)?saved:(d[0]?.id||""));});},[]);
+ useEffect(()=>{fetch("/api/branches").then(r=>r.json()).then((d:Branch[])=>{setBranches(d.map(branchDisplay));const saved=localStorage.getItem("che_branch_id");setBranchId(saved&&d.some(x=>x.id===saved)?saved:(d[0]?.id||""));});},[]);
  useEffect(()=>{if(branchId){localStorage.setItem("che_branch_id",branchId);setMenuLoading(true);fetch("/api/menu?branch_id="+branchId).then(r=>r.json()).then(setProducts).finally(()=>setMenuLoading(false));}},[branchId]);
  useEffect(()=>{if(modeReady)localStorage.setItem("che_order_type",mode)},[mode,modeReady]);
  useEffect(()=>{const active=catBarRef.current?.querySelector<HTMLAnchorElement>(`a[href="#${activeCat}"]`);active?.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"})},[activeCat]);
@@ -62,6 +73,6 @@ export default function Home(){
   <section className="brandCrossSell"><div className="crossSellHead"><span>CHE BAKERY · MET CAFÉ</span><h2>Algo rico para completar.</h2><p>Muy pronto vas a poder sumar Bakery y Café al mismo pedido.</p></div><div className="brandBands"><div className="brandBanner"><picture><source media="(max-width: 760px)" srcSet="/images/banners/che-bakery-mobile.png"/><img onError={assetFallback} loading="lazy" src="/images/banners/che-bakery-desktop.png" alt="Che Bakery"/></picture></div><div className="brandBanner"><picture><source media="(max-width: 760px)" srcSet="/images/banners/met-cafe-mobile.png"/><img onError={assetFallback} loading="lazy" src="/images/banners/met-cafe-desktop.png" alt="MET Café"/></picture></div></div></section>
   <footer className="shopFooter"><div className="logo footerLogo"><img onError={assetFallback} src="/images/che-bagels-logo.png" alt="Che Bagels"/></div><p>Che Bagels · Che Bakery · MET Café</p><small>Delivery · Retiro · Pedí directo</small></footer>
   {cart>0&&<button className="floatingCart" onClick={openCart}><b>Ver mi pedido</b><span>{cart} {cart===1?"producto":"productos"} · {money(String(cartTotal))} →</span></button>}
-  {locationOpen&&<div className="modalBack" onClick={()=>setLocationOpen(false)}><section className="locationModal" role="dialog" aria-modal="true" aria-labelledby="location-title" onClick={e=>e.stopPropagation()}><button ref={locationCloseRef} className="close" onClick={()=>setLocationOpen(false)} aria-label="Cerrar selector de sucursal">×</button><span className="modalKicker">TU PEDIDO</span><h2 id="location-title">¿Dónde estás?</h2><p>Elegí la sucursal y cómo querés recibir tu pedido.</p><div className="modalModes"><button className={mode==="DELIVERY"?"active":""} onClick={()=>setMode("DELIVERY")}>Delivery</button><button className={mode==="PICKUP"?"active":""} onClick={()=>setMode("PICKUP")}>Retiro</button></div><div className="modalBranches">{branches.map(b=><button className={b.id===branchId?"active":""} key={b.id} onClick={()=>setBranchId(b.id)}><span><b>{b.name}</b><small>{b.address}</small></span><i>{b.id===branchId?"✓":""}</i></button>)}</div><button className="modalDone" onClick={()=>setLocationOpen(false)}>LISTO, VER MENÚ</button></section></div>}
+  {locationOpen&&<div className="modalBack" onClick={()=>setLocationOpen(false)}><section className="locationModal" role="dialog" aria-modal="true" aria-labelledby="location-title" onClick={e=>e.stopPropagation()}><button ref={locationCloseRef} className="close" onClick={()=>setLocationOpen(false)} aria-label="Cerrar selector de sucursal">×</button><span className="modalKicker">TU PEDIDO</span><h2 id="location-title">¿Dónde estás?</h2><p>Elegí la sucursal y cómo querés recibir tu pedido.</p><div className="modalModes"><button className={mode==="DELIVERY"?"active":""} onClick={()=>setMode("DELIVERY")}>Delivery</button><button className={mode==="PICKUP"?"active":""} onClick={()=>setMode("PICKUP")}>Retiro</button></div><div className="modalBranches">{branches.map(b=><button className={b.id===branchId?"active":""} key={b.id} onClick={()=>setBranchId(b.id)}><span><b>{b.name}</b><small>{b.address}</small></span><i>{b.id===branchId?"✓":""}</i></button>)}</div>{plannedBranches.filter(planned=>!branches.some(branch=>branch.slug===planned.slug)).map(planned=><div key={planned.slug} className="modalBranchPlanned" style={{padding:"12px 16px",border:"1px solid #e5d8c9",marginTop:8,opacity:.7}}><strong>{planned.name}</strong><small style={{display:"block",marginTop:4}}>{planned.address}</small><small style={{display:"block",marginTop:4}}>Próximamente disponible para pedidos</small></div>)}<button className="modalDone" onClick={()=>setLocationOpen(false)}>LISTO, VER MENÚ</button></section></div>}
  </main>
 }
