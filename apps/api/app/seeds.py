@@ -5,7 +5,13 @@ from app.db.session import SessionLocal
 from app.models.core import Brand,Branch,Category,Product,ProductBranchAvailability
 
 BRANDS=[("Che Bagels","che-bagels"),("Che Bakery","che-bakery"),("MET Café","met-cafe")]
-BRANCHES=[("Sucursal 1","sucursal-1","Dirección pendiente de confirmación"),("Sucursal 2","sucursal-2","Dirección pendiente de confirmación")]
+# Preserve existing slugs so historical orders retain their branch IDs.
+BRANCHES=[
+    ("Recoleta","sucursal-1","Teniente Zotti, Asunción"),
+    ("Las Lomas","sucursal-2","PCGC+28M, Asunción"),
+    ("Ciudad del Este","ciudad-del-este","F9GG+CXP, Ciudad del Este"),
+    ("San Vicente","san-vicente","San Vicente, Asunción (dirección exacta pendiente de confirmar)"),
+]
 
 def get_or_create(db,model,slug,**values):
     row=db.scalar(select(model).where(model.slug==slug))
@@ -15,7 +21,14 @@ def get_or_create(db,model,slug,**values):
 def run():
     with SessionLocal() as db:
         brands={slug:get_or_create(db,Brand,slug,name=name,active=True) for name,slug in BRANDS}
-        branches=[get_or_create(db,Branch,slug,name=name,address=address,active=True) for name,slug,address in BRANCHES]
+        branches=[]
+        for name,slug,address in BRANCHES:
+            branch=get_or_create(db,Branch,slug,name=name,address=address,active=True)
+            # Update only placeholder branch details; preserve operator-edited addresses.
+            if branch.name in {"Sucursal 1","Sucursal 2"} or branch.address=="Dirección pendiente de confirmación":
+                branch.name=name
+                branch.address=address
+            branches.append(branch)
         categories={
             "calientes": get_or_create(db,Category,"bagels-calientes",brand_id=brands["che-bagels"].id,name="Bagels calientes",sort_order=1,active=True),
             "frios": get_or_create(db,Category,"bagels-frios",brand_id=brands["che-bagels"].id,name="Bagels fríos",sort_order=2,active=True),
@@ -86,9 +99,12 @@ def run():
                 product.name=name
                 product.category_id=categories[category_key].id
                 product.description=description or None
-                product.price=Decimal(str(price))
+                # Never overwrite prices managed by operations during seed reruns.
                 product.active=True
+            # New branches start with their menu unavailable until local stock is confirmed.
             for branch in branches:
+                if branch.slug in {"ciudad-del-este","san-vicente"}:
+                    continue
                 if not db.get(ProductBranchAvailability,(product.id,branch.id)):
                     db.add(ProductBranchAvailability(product_id=product.id,branch_id=branch.id,available=True))
         db.commit()
