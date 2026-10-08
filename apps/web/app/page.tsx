@@ -27,7 +27,7 @@ const localProductImages:Record<string,string>={
  "bec-bacon-egg-cheese":"/images/products/bagel-huevo-panceta.png",
 };
 
-const assetFallback=(event:React.SyntheticEvent<HTMLImageElement>)=>{const img=event.currentTarget;const path=new URL(img.src).pathname;if(!path.startsWith("/images/")||img.dataset.fallback==="1")return;img.dataset.fallback="1";img.src="https://raw.githubusercontent.com/equantum-py/chebagels/feat/che-club-review/apps/web/public"+path;};
+const assetFallback=(event:React.SyntheticEvent<HTMLImageElement>)=>{const img=event.currentTarget;if(img.dataset.fallback==="1"){img.style.display="none";return;}const original=img.dataset.originalPath||new URL(img.src).pathname;if(!original.startsWith("/images/")){img.style.display="none";return;}img.dataset.fallback="1";img.dataset.originalPath=original;const picture=img.closest("picture");picture?.querySelectorAll("source").forEach(source=>source.remove());img.src="https://raw.githubusercontent.com/equantum-py/chebagels/feat/che-club-review/apps/web/public"+original;};
 export default function Home(){
  const [branches,setBranches]=useState<Branch[]>([]),[branchId,setBranchId]=useState(""),[mode,setMode]=useState<Mode>("DELIVERY"),[modeReady,setModeReady]=useState(false);
  const [products,setProducts]=useState<Product[]>([]),[menuLoading,setMenuLoading]=useState(true),[locationOpen,setLocationOpen]=useState(false),[activeCat,setActiveCat]=useState("menu");
