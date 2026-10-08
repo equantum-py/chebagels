@@ -39,3 +39,37 @@ class OrderStatusHistory(Base):
     __tablename__="order_status_history"; id:Mapped[uuid.UUID]=mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4); order_id:Mapped[uuid.UUID]=mapped_column(ForeignKey("orders.id")); status:Mapped[OrderStatus]=mapped_column(Enum(OrderStatus,name="order_status")); changed_by_user_id:Mapped[uuid.UUID|None]=mapped_column(ForeignKey("users.id")); note:Mapped[str|None]=mapped_column(Text); created_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),server_default=func.now())
 class Payment(TimestampMixin,Base):
     __tablename__="payments"; id:Mapped[uuid.UUID]=mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4); order_id:Mapped[uuid.UUID]=mapped_column(ForeignKey("orders.id")); provider:Mapped[str]=mapped_column(String(60)); method:Mapped[str]=mapped_column(String(60)); status:Mapped[PaymentStatus]=mapped_column(Enum(PaymentStatus,name="payment_status"),default=PaymentStatus.PENDING); amount:Mapped[Decimal]=mapped_column(Numeric(12,2)); external_reference:Mapped[str|None]=mapped_column(String(255),index=True)
+
+
+class LoyaltyProgram(TimestampMixin,Base):
+    __tablename__="loyalty_programs"
+    id:Mapped[uuid.UUID]=mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    name:Mapped[str]=mapped_column(String(120),unique=True)
+    active:Mapped[bool]=mapped_column(Boolean,default=False)
+    guaranies_per_point:Mapped[int]=mapped_column(Integer,default=1000)
+
+class LoyaltyAccount(TimestampMixin,Base):
+    __tablename__="loyalty_accounts"
+    id:Mapped[uuid.UUID]=mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    customer_id:Mapped[uuid.UUID]=mapped_column(ForeignKey("customers.id"),unique=True,index=True)
+    program_id:Mapped[uuid.UUID]=mapped_column(ForeignKey("loyalty_programs.id"))
+    verified_at:Mapped[datetime|None]=mapped_column(DateTime(timezone=True),nullable=True)
+
+class LoyaltyTransaction(Base):
+    __tablename__="loyalty_transactions"
+    id:Mapped[uuid.UUID]=mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    account_id:Mapped[uuid.UUID]=mapped_column(ForeignKey("loyalty_accounts.id"),index=True)
+    order_id:Mapped[uuid.UUID|None]=mapped_column(ForeignKey("orders.id"),nullable=True)
+    points:Mapped[int]=mapped_column(Integer)
+    event_key:Mapped[str]=mapped_column(String(180),unique=True)
+    reason:Mapped[str]=mapped_column(String(40))
+    created_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),server_default=func.now())
+
+class LoyaltyReward(TimestampMixin,Base):
+    __tablename__="loyalty_rewards"
+    id:Mapped[uuid.UUID]=mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
+    program_id:Mapped[uuid.UUID]=mapped_column(ForeignKey("loyalty_programs.id"))
+    title:Mapped[str]=mapped_column(String(180))
+    description:Mapped[str|None]=mapped_column(Text)
+    points_cost:Mapped[int]=mapped_column(Integer)
+    active:Mapped[bool]=mapped_column(Boolean,default=False)
