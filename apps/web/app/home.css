@@ -186,3 +186,18 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
 .productConfig>.clubPointsEstimate{font-size:14px;margin:8px 0 16px}
 .cartFooter .clubPointsEstimate,.checkoutForm .clubPointsEstimate{margin:7px 0 12px;font-size:12px}
 @media(max-width:600px){.foodCard .clubPointsEstimate{font-size:11px;line-height:1.3;margin:4px 0 7px}.foodCard .clubPointsEstimate small{font-size:9px}}
+
+/* CHE visual refresh: clean, restaurant-menu typography across the storefront. */
+:root{--che-font:Arial,Helvetica,"Segoe UI",sans-serif}
+html,body,button,input,textarea,select{font-family:var(--che-font)}
+body{font-family:var(--che-font)}
+.store h1,.store h2,.store h3,.store h4,.store p,.store a,.store button,.store strong,.store label,
+.cd h1,.cd h2,.cd h3,.cd p,.cd button,.cd a{font-family:var(--che-font)}
+.heroCopy h1,.sectionTitle h2,.productConfig h1,.menuIntro h1,.categoryHeading h2,
+.store .brandBands h2,.store .direct h2,.store .modal h2{font-family:var(--che-font);letter-spacing:-.035em;line-height:1.06}
+.store h1,.store h2,.store h3{font-weight:800}
+.foodCard{background:#fff;border-color:#ece4db}
+.foodInfo h3{font-size:16px;line-height:1.3;letter-spacing:-.015em}
+.foodInfo p{line-height:1.45}
+.clubPointsEstimate{font-weight:600}
+@media(max-width:600px){.heroCopy h1{letter-spacing:-.035em}.sectionTitle h2{font-size:clamp(29px,8vw,40px)}.foodInfo h3{font-size:14px}}
