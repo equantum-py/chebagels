@@ -1,4 +1,6 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Header
+import os
+import secrets
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy import select
 
@@ -9,6 +11,16 @@ from app.services.orders import create_order, OrderValidationError
 from app.services.operations import change_order_status, list_branch_orders, OrderOperationError
 
 router = APIRouter(prefix="/api")
+
+def require_operations_access(authorization: str | None = Header(default=None)) -> None:
+    """Temporary server-side API gate. Never expose token to browser code."""
+    token = os.environ.get("CHE_OPERATIONS_API_TOKEN", "")
+    if not token or len(token) < 32:
+        raise HTTPException(status_code=503, detail="Operaciones no habilitadas")
+    scheme, _, supplied = (authorization or "").partition(" ")
+    if scheme.lower() != "bearer" or not secrets.compare_digest(supplied, token):
+        raise HTTPException(status_code=401, detail="Acceso no autorizado", headers={"WWW-Authenticate": "Bearer"})
+
 
 @router.get("/health", tags=["system"])
 def health():
@@ -102,7 +114,7 @@ def order(order_number: str):
 
 
 @router.get("/operations/branches/{branch_id}/orders")
-def operational_orders(branch_id: str, status: OrderStatus|None=None):
+def operational_orders(branch_id: str, status: OrderStatus|None=None, _access: None = Depends(require_operations_access)):
     import uuid
     try:
         bid=uuid.UUID(branch_id)
@@ -136,7 +148,7 @@ def operational_orders(branch_id: str, status: OrderStatus|None=None):
         return result
 
 @router.patch("/operations/orders/{order_number}/status")
-def operational_order_status(order_number: str,payload: OrderStatusUpdate):
+def operational_order_status(order_number: str,payload: OrderStatusUpdate, _access: None = Depends(require_operations_access)):
     with SessionLocal() as db:
         row=db.scalar(select(Order).where(Order.order_number==order_number))
         if not row:

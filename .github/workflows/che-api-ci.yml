@@ -2,7 +2,7 @@ name: Che API CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feat/che-club-review]
   workflow_dispatch:
 
 jobs:
@@ -67,7 +67,7 @@ jobs:
           import urllib.request
           for _ in range(30):
               try:
-                  with urllib.request.urlopen("http://127.0.0.1:8000/health", timeout=2) as response:
+                  with urllib.request.urlopen("http://127.0.0.1:8000/api/health", timeout=2) as response:
                       if response.status == 200:
                           print("API ready")
                           raise SystemExit(0)

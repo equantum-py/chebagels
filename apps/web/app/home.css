@@ -179,3 +179,168 @@ body{font-family:Arial,Helvetica,sans-serif;font-weight:400;letter-spacing:0}.pr
 .clubPage{min-height:100vh;background:#fff8ec;color:#2b1714}.clubNav{max-width:1160px;margin:auto;padding:22px 24px;display:flex;align-items:center;justify-content:space-between}.clubNav img{width:76px;height:60px;object-fit:contain}.clubNav>a:last-child{font-size:13px;font-weight:800;color:#8f2428;text-decoration:none}.clubHero{background:#8f2428;color:#fff8ec;padding:92px max(24px,calc((100vw - 1060px)/2)) 100px}.clubHero>span{font-size:12px;letter-spacing:2px;font-weight:800;color:#f3c487}.clubHero h1{font-size:clamp(42px,5.5vw,78px);line-height:1.06;letter-spacing:-2.5px;margin:24px 0}.clubHero h1 em{font-family:Georgia,serif;color:#f3c487;font-weight:400}.clubHero p{font-size:18px;line-height:1.6;max-width:620px;color:#f5e2d5}.clubHero a{display:inline-block;margin-top:24px;padding:15px 25px;border-radius:6px;background:#f3c487;color:#2b1714;font-weight:800;text-decoration:none}.clubBenefits{max-width:1160px;margin:0 auto;padding:70px 24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.clubBenefits article{padding:26px;border:1px solid #e6d6c5;border-radius:12px;background:#fff}.clubBenefits article span{color:#8f2428;font-weight:900;font-size:12px}.clubBenefits h2{font-size:24px;margin:20px 0 10px}.clubBenefits p{font-size:15px;line-height:1.6;color:#675750}.clubDisclaimer{max-width:1112px;margin:0 auto 65px;padding:18px 24px;background:#f5e9d8;border-radius:8px;font-size:13px;line-height:1.6;color:#665249}.clubFooter{padding:24px;border-top:1px solid #e6d6c5;display:flex;justify-content:space-between;gap:16px;max-width:1160px;margin:auto;color:#8f2428}@media(max-width:700px){.clubHero{padding:64px 24px 72px}.clubHero h1{letter-spacing:-1.4px}.clubBenefits{grid-template-columns:1fr;padding:32px 18px;gap:12px}.clubDisclaimer{margin:0 18px 35px}.clubFooter{flex-direction:column}}
 
 .clubHomeLink{max-width:1180px;margin:22px auto 0;padding:19px 24px;display:flex;align-items:center;gap:16px;justify-content:space-between;background:#fff8ec;border:1px solid #e0cba8;border-radius:9px;color:#2b1714;text-decoration:none}.clubHomeLink strong{color:#8f2428;font-size:12px;letter-spacing:1px}.clubHomeLink span{font-size:13px}.clubHomeLink b{color:#8f2428;font-size:13px;white-space:nowrap}@media(max-width:700px){.clubHomeLink{margin:14px 14px 0;padding:17px;align-items:flex-start;flex-direction:column;gap:7px}}
+
+/* CHE Club preview points: discreet, responsive and clearly non-transactional */
+.clubPointsEstimate{margin:5px 0 9px;color:#8d552d;font-size:12px;font-weight:600;line-height:1.35}
+.clubPointsEstimate small{font-size:10px;font-weight:400;color:#8a8077}
+.productConfig>.clubPointsEstimate{font-size:14px;margin:8px 0 16px}
+.cartFooter .clubPointsEstimate,.checkoutForm .clubPointsEstimate{margin:7px 0 12px;font-size:12px}
+@media(max-width:600px){.foodCard .clubPointsEstimate{font-size:11px;line-height:1.3;margin:4px 0 7px}.foodCard .clubPointsEstimate small{font-size:9px}}
+
+/* CHE visual refresh: clean, restaurant-menu typography across the storefront. */
+:root{--che-font:Arial,Helvetica,"Segoe UI",sans-serif}
+html,body,button,input,textarea,select{font-family:var(--che-font)}
+body{font-family:var(--che-font)}
+.store h1,.store h2,.store h3,.store h4,.store p,.store a,.store button,.store strong,.store label,
+.cd h1,.cd h2,.cd h3,.cd p,.cd button,.cd a{font-family:var(--che-font)}
+.heroCopy h1,.sectionTitle h2,.productConfig h1,.menuIntro h1,.categoryHeading h2,
+.store .brandBands h2,.store .direct h2,.store .modal h2{font-family:var(--che-font);letter-spacing:-.035em;line-height:1.06}
+.store h1,.store h2,.store h3{font-weight:800}
+.foodCard{background:#fff;border-color:#ece4db}
+.foodInfo h3{font-size:16px;line-height:1.3;letter-spacing:-.015em}
+.foodInfo p{line-height:1.45}
+.clubPointsEstimate{font-weight:600}
+@media(max-width:600px){.heroCopy h1{letter-spacing:-.035em}.sectionTitle h2{font-size:clamp(29px,8vw,40px)}.foodInfo h3{font-size:14px}}
+
+/* QA polish: quiet points and branded missing-photo states */
+.store .foodCard .clubPointsEstimate{font-weight:400!important;color:#86756d!important;font-size:11px!important;line-height:1.4!important;margin:4px 0 8px!important}
+.store .foodCard .clubPointsEstimate small{color:#a5968b!important;font-size:10px!important}
+.store .foodCard .foodInfo{display:flex;flex-direction:column;flex:1;min-height:0}
+.store .foodCard .foodAction{margin-top:auto}
+.cheProductPlaceholder{width:100%;height:100%;min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;padding:22px;background:linear-gradient(145deg,#fff9f0 0%,#eee1d1 100%);color:#8f2428}
+.chePlaceholderLogo{display:block;font-size:clamp(28px,3vw,43px);font-weight:900;letter-spacing:-.08em;line-height:1}
+.chePlaceholderName{display:block;max-width:190px;color:#4b3029;font-size:14px;font-weight:800;line-height:1.25}
+.cheProductPlaceholder small{color:#80685d;font-size:11px}
+@media(max-width:600px){.cheProductPlaceholder{min-height:145px;padding:14px;gap:6px}.chePlaceholderName{font-size:12px}.store .foodCard .clubPointsEstimate{font-size:10px!important}}
+
+/* CHE home: editorial navigation and informational sections */
+.store .cheHeader{display:flex;justify-content:space-between;gap:20px;padding-left:max(22px,calc((100vw - 1280px)/2));padding-right:max(22px,calc((100vw - 1280px)/2))}
+.chePrimaryNav{display:flex!important;align-items:center;gap:clamp(12px,1.7vw,27px)!important;white-space:nowrap}
+.chePrimaryNav a{font-size:13px;font-weight:750;color:#39221c;text-decoration:none;transition:color .2s}
+.chePrimaryNav a:hover,.chePrimaryNav a:focus-visible{color:#8f2428}
+.cheOrderControls{display:flex;align-items:center;gap:12px}
+.cheOrderControls .locationTrigger{border:0;background:transparent;font-weight:800;white-space:nowrap;cursor:pointer;color:#39221c;font-size:12px}
+.cheOrderControls .fulfillment{flex-shrink:0}
+.cheOrderControls .cartBtn{white-space:nowrap}
+.cheMobileNav{display:none;position:relative}
+.cheInfoSections{max-width:1180px;margin:40px auto 75px;padding:0 20px}
+.cheInfoSections section,.cheInfoSections article{scroll-margin-top:100px}
+.cheInfoIntro{padding:48px 52px;border-radius:18px;background:#fff7e9}
+.cheInfoSections span{font-size:11px;font-weight:900;letter-spacing:1.5px;color:#8f2428}
+.cheInfoSections h2{font-size:clamp(29px,3.2vw,43px);letter-spacing:-1.3px;line-height:1.1;margin:12px 0}
+.cheInfoSections p{color:#66534b;line-height:1.65;font-size:15px}
+.cheInfoSections a{font-size:13px;font-weight:800;color:#8f2428;text-decoration:none}
+.cheInfoBranches{margin-top:65px}
+.cheInfoHeading{max-width:680px;margin-bottom:25px}
+.cheBranchCards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.cheBranchCards article{padding:23px;border:1px solid #e9dcd0;border-radius:12px;background:white}
+.cheBranchCards h3{margin:0;font-size:19px}
+.cheBranchCards p{font-size:13px;min-height:44px;margin:10px 0 18px}
+.cheInfoContact{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:40px 45px;background:#f5e9d8;border-radius:16px;margin-top:65px}
+.cheInfoContact h2{margin-bottom:8px}.cheInfoContact p{margin:0}
+.cheContactActions{display:flex;gap:10px;flex-wrap:wrap}
+.cheContactActions a{display:inline-flex;padding:13px 18px;background:#8f2428;color:white;border-radius:7px}
+.cheContactActions a:last-child{background:white;color:#8f2428}
+@media(max-width:1200px){.store .cheHeader{gap:10px;padding-left:20px;padding-right:20px}.chePrimaryNav{gap:12px!important}.chePrimaryNav a{font-size:12px}.cheOrderControls{gap:7px}.cheOrderControls .locationTrigger span{display:none}}
+@media(max-width:900px){.chePrimaryNav{display:none!important}.cheMobileNav{display:block;margin-left:4px}.cheMobileNav summary{list-style:none;cursor:pointer;font-size:23px;padding:7px 10px;color:#8f2428}.cheMobileNav summary::-webkit-details-marker{display:none}.cheMobileNav>div{position:absolute;right:0;top:100%;z-index:40;min-width:210px;background:#fffaf0;border:1px solid #e6d7c7;border-radius:12px;padding:10px;box-shadow:0 12px 28px #2b171426}.cheMobileNav a{display:block;padding:12px;color:#39221c;font-size:14px;font-weight:800;text-decoration:none}.cheMobileNav a:hover{background:#f7e9dc}.cheBranchCards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.store .cheHeader{gap:7px;padding:0 12px}.cheOrderControls{gap:5px}.cheOrderControls .locationTrigger{font-size:16px;padding:4px}.cheOrderControls .locationTrigger span{display:none}.cheOrderControls .fulfillment{font-size:11px}.cheOrderControls .cartBtn{font-size:11px;padding:9px 8px}.cheMobileNav{margin-left:0}.cheMobileNav summary{padding:4px;font-size:21px}.cheInfoSections{padding:0 15px;margin-top:20px}.cheInfoIntro{padding:30px 23px}.cheBranchCards{grid-template-columns:1fr;gap:10px}.cheBranchCards article{padding:19px}.cheBranchCards p{min-height:0}.cheInfoContact{margin-top:45px;padding:27px 23px;flex-direction:column;align-items:flex-start}.cheInfoBranches{margin-top:45px}}
+
+/* Persistent inner-page navigation, same destinations as home */
+.store .shopHeader:has(.cheInnerNav){display:flex;justify-content:space-between;gap:20px;padding-left:max(22px,calc((100vw - 1280px)/2));padding-right:max(22px,calc((100vw - 1280px)/2))}
+.cheInnerNav{display:flex;align-items:center;gap:28px!important;min-width:0}
+.cheInnerBack{white-space:nowrap}.cheInnerBack a{color:#8f2428;font-weight:800;font-size:13px;text-decoration:none}
+.cheInnerLinks{display:flex;gap:clamp(10px,1.6vw,25px);align-items:center;white-space:nowrap}
+.cheInnerLinks a{color:#39221c;text-decoration:none;font-weight:800;font-size:13px}
+.cheInnerLinks a:hover{color:#8f2428}
+@media(max-width:1000px){.cheInnerNav{gap:13px!important}.cheInnerLinks{gap:9px}.cheInnerLinks a{font-size:11px}}
+@media(max-width:760px){.store .shopHeader:has(.cheInnerNav){padding:0 12px;gap:8px}.cheInnerLinks{display:none}.cheInnerBack a{font-size:12px}}
+
+/* Shared public layout */
+.siteHeader{position:sticky;top:0;z-index:150;background:#fffaf0;box-shadow:0 2px 10px #28171512;font-family:Arial,Helvetica,sans-serif}
+.siteHeaderTop{height:62px;max-width:1320px;margin:auto;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.siteBrand img{width:66px;height:54px;object-fit:contain}
+.siteLinks{display:flex;gap:clamp(12px,2vw,30px);align-items:center}
+.siteLinks a{font-size:13px;font-weight:800;color:#321c18;text-decoration:none;white-space:nowrap}
+.siteLinks a:hover,.siteLinks a[aria-current="page"]{color:#8f2428}
+.siteHeaderActions{display:flex;gap:12px;align-items:center}
+.siteCart{border:0;border-radius:7px;background:#2b1714;color:white;font-size:13px;font-weight:800;padding:10px 15px;white-space:nowrap;cursor:pointer}
+.siteCart b{background:#e69c47;border-radius:50%;padding:4px 8px;margin-left:7px;color:#281715}
+.siteHeaderOrder{min-height:36px;background:#8f2428;color:white;display:flex;justify-content:center;align-items:center;gap:18px}
+.siteBranchButton{border:0;background:transparent;color:white;font-weight:800;cursor:pointer;font-size:12px}
+.siteBranchButton span{margin-left:5px}
+.siteOrderModes{display:flex;gap:4px;padding:3px;border-radius:20px;background:#fff3e325}
+.siteOrderModes button{border:0;background:transparent;color:white;padding:5px 15px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:800}
+.siteOrderModes button.active{background:#fff8e9;color:#8f2428}
+.siteMobileToggle{display:none;background:none;border:0;color:#8f2428;font-size:24px;cursor:pointer}
+.siteMobileMenu{display:none}
+.siteModalBackdrop{position:fixed;inset:0;background:#2817159e;z-index:300;display:grid;place-items:center;padding:16px}
+.siteModal{position:relative;background:#fff9ed;padding:30px;width:min(100%,480px);max-height:85vh;overflow:auto;border-radius:12px}
+.siteModal h2{font-size:30px;margin:0 0 10px}.siteModal p{font-size:14px;color:#745e52}
+.siteModal>button:not(.siteModalClose){display:flex;flex-direction:column;width:100%;text-align:left;padding:13px 15px;margin:8px 0;background:white;border:1px solid #e6d5c4;cursor:pointer;border-radius:7px;color:#281715}
+.siteModal>button.selected{border-color:#8f2428}
+.siteModal>button small{margin-top:5px;color:#6e594d}
+.siteModal .siteModalClose{position:absolute;top:10px;right:15px;border:0;background:none;font-size:28px;cursor:pointer}
+.siteModal>button.siteModalDone{background:#8f2428;color:white;text-align:center;display:block;font-weight:800}
+.siteFooter{display:flex;justify-content:space-between;gap:30px;align-items:center;padding:35px max(24px,calc((100vw - 1180px)/2));background:#2b1714;color:#fff8ed}
+.siteFooter p{font-size:12px;color:#e0c4a9}.siteFooter nav{display:flex;gap:16px;flex-wrap:wrap}
+.siteFooter a{color:#fff8ed;font-size:12px;text-decoration:none;font-weight:700}
+.siteContent{max-width:1180px;min-height:55vh;margin:auto;padding:55px 24px 85px;background:#fff}
+.siteContent h1{font-size:clamp(36px,5vw,65px);line-height:1.08;letter-spacing:-1.5px;margin:18px 0}
+.siteContent>p{font-size:17px;max-width:720px;line-height:1.7;color:#6d5347}
+.siteEyebrow{color:#8f2428;font-size:12px;font-weight:900;letter-spacing:2px}
+.siteBack{display:inline-block;margin-bottom:30px;color:#8f2428;font-size:13px;text-decoration:none;font-weight:800}
+.siteContentPanel{margin-top:35px;padding:35px;border-radius:14px;background:#fff5e6;max-width:750px}
+.siteContentPanel a,.siteLocationGrid a,.siteContent>a{color:#8f2428;font-weight:800;text-decoration:none}
+.siteLocationGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:35px}
+.siteLocationGrid article{border:1px solid #e6d8c8;border-radius:12px;padding:26px;background:#fffaf3}
+.siteLocationGrid h2{font-size:22px;margin:0}.siteLocationGrid p{color:#685349;font-size:14px}
+.siteDisclaimer{font-size:12px!important;color:#806f63!important}
+.clubLandingHero{display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center;background:#fff5e6;border-radius:20px;padding:45px}
+.clubLandingHero h1{font-size:clamp(36px,4vw,62px)}.clubLandingHero p{font-size:17px;line-height:1.6}
+.clubLandingHero img{width:100%;max-height:400px;object-fit:contain;border-radius:15px}
+.clubLandingHero small{display:block;margin-top:20px;line-height:1.5;color:#745e52}
+.sitePrimaryButton{display:inline-block;background:#8f2428;color:white!important;border-radius:7px;padding:15px 20px;margin-top:15px;text-decoration:none;font-weight:800}
+.clubLandingSteps{margin:50px 0}.clubLandingSteps>div{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.clubLandingSteps article{background:#fff9f0;padding:25px;border-radius:12px}
+@media(max-width:850px){.siteLinks{gap:11px}.siteLinks a{font-size:11px}.siteHeaderTop{gap:8px}.siteLocationGrid{grid-template-columns:1fr}}
+@media(max-width:700px){.siteHeaderTop{height:62px;padding:0 13px}.siteLinks{display:none}.siteMobileToggle{display:block}.siteHeaderOrder{justify-content:space-between;padding:0 15px}.siteMobileMenu{display:flex;flex-direction:column;position:absolute;top:98px;right:0;left:0;background:#fffaf0;box-shadow:0 14px 20px #28171530;padding:12px 20px;max-height:calc(100dvh - 98px);overflow:auto}.siteMobileMenu a,.siteMobileMenu>button{display:block;border:0;background:transparent;color:#281715;text-decoration:none;font-size:16px;font-weight:800;padding:12px;text-align:left}.siteMobileModes{display:flex;gap:10px}.siteMobileModes button{background:#8f2428;color:white;border:0;border-radius:8px;padding:12px}.siteFooter{flex-direction:column;align-items:flex-start;padding:30px 22px}.siteContent{padding:35px 18px 60px}.clubLandingHero{grid-template-columns:1fr;padding:25px;gap:20px}.clubLandingSteps>div{grid-template-columns:1fr}.siteCart{font-size:11px;padding:9px}.siteBrand img{width:54px}.siteContentPanel{padding:24px}}
+
+/* Home refresh: concise, legible, conversion-focused */
+.homeCatalog{max-width:1280px;margin:0 auto}
+.homeCatalog .homeCategory{margin-bottom:38px}
+.homeCatalog .homeCategoryHead h2{font-family:Arial,Helvetica,sans-serif;font-weight:850;letter-spacing:-.8px;line-height:1.15;font-size:clamp(25px,2.8vw,34px)}
+.homeCatalog .homeCategoryHead p{font-size:14px;line-height:1.5}
+.homeCatalog .foodCard{overflow:hidden}
+.homeCatalog .foodInfo h3{font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:800;line-height:1.3;letter-spacing:-.1px}
+.homeCatalog .foodInfo>p{font-size:12px;line-height:1.5}
+.homeCatalog .foodAction strong{font-size:15px;font-weight:850}
+.homeCatalog .clubPointsEstimate{font-weight:500!important;opacity:.72;font-size:11px!important}
+.homeCatalog .foodPic{aspect-ratio:1.16/1;overflow:hidden}
+.homeCatalog .foodPic img{width:100%;height:100%;object-fit:cover}
+.homeCatalog .cards{gap:18px}
+.valueChips{display:none!important}
+.quickCats{scroll-margin-top:110px}
+.homeCatalog .homeCategory{scroll-margin-top:125px}
+@media(max-width:700px){.homeCatalog .cards{gap:12px}.homeCatalog .foodPic{aspect-ratio:1/1}.homeCatalog .homeCategoryHead h2{font-size:25px}}
+
+/* CHE typography system — body Inter, headings Montserrat */
+html,body,button,input,select,textarea{font-family:var(--font-inter),Arial,sans-serif}
+body{font-weight:400}
+h1,h2,h3,h4,h5,h6,.siteLinks,.siteMobileMenu,.siteCart,.sitePrimaryButton,.foodAction strong{font-family:var(--font-montserrat),Arial,sans-serif}
+h1,h2{font-weight:700}h3,h4{font-weight:600}
+.siteLinks a,.siteCart,.sitePrimaryButton,.siteBranchButton,.siteOrderModes button{font-weight:600}
+.homeCatalog .homeCategoryHead h2,.homeCatalog .foodInfo h3,.siteContent h1{font-family:var(--font-montserrat),Arial,sans-serif;font-weight:700}
+.homeCatalog .foodAction strong{font-weight:700}
+.siteHeader,.siteContent,.siteFooter{font-family:var(--font-inter),Arial,sans-serif}
+.clubLandingHero h1{font-family:var(--font-montserrat),Arial,sans-serif}
+
+/* Larger CHE Bagels identity in the shared navigation */
+.siteHeaderTop{height:88px}
+.siteBrand{display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 auto;min-width:115px}
+.siteBrand img{display:block;width:108px;height:76px;object-fit:contain;object-position:left center}
+@media(max-width:700px){
+ .siteHeaderTop{height:76px}
+ .siteBrand{min-width:88px}
+ .siteBrand img{width:84px;height:68px}
+ .siteMobileMenu{top:112px;max-height:calc(100dvh - 112px)}
+}
