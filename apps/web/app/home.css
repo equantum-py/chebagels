@@ -333,3 +333,14 @@ h1,h2{font-weight:700}h3,h4{font-weight:600}
 .homeCatalog .foodAction strong{font-weight:700}
 .siteHeader,.siteContent,.siteFooter{font-family:var(--font-inter),Arial,sans-serif}
 .clubLandingHero h1{font-family:var(--font-montserrat),Arial,sans-serif}
+
+/* Larger CHE Bagels identity in the shared navigation */
+.siteHeaderTop{height:88px}
+.siteBrand{display:inline-flex;align-items:center;justify-content:flex-start;flex:0 0 auto;min-width:115px}
+.siteBrand img{display:block;width:108px;height:76px;object-fit:contain;object-position:left center}
+@media(max-width:700px){
+ .siteHeaderTop{height:76px}
+ .siteBrand{min-width:88px}
+ .siteBrand img{width:84px;height:68px}
+ .siteMobileMenu{top:112px;max-height:calc(100dvh - 112px)}
+}
