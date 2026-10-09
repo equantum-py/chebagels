@@ -46,7 +46,7 @@ export default function Home(){
  const {count:cart,total:cartTotal,add:addToCart,openCart}=useCart();
  const catBarRef=useRef<HTMLElement|null>(null),locationCloseRef=useRef<HTMLButtonElement|null>(null);
  const selected=useMemo(()=>branches.find(x=>x.id===branchId),[branches,branchId]);
- useEffect(()=>{const savedMode=localStorage.getItem("che_order_type");setMode(savedMode==="PICKUP"?"PICKUP":"DELIVERY");setModeReady(true)},[]);
+ useEffect(()=>{const sync=()=>{const savedMode=localStorage.getItem("che_order_type");setMode(savedMode==="PICKUP"?"PICKUP":"DELIVERY");setBranchId(localStorage.getItem("che_branch_id")||"")};sync();setModeReady(true);window.addEventListener("che:location-change",sync);return()=>window.removeEventListener("che:location-change",sync)},[]);
  useEffect(()=>{fetch("/api/branches").then(r=>r.json()).then((d:Branch[])=>{setBranches(d.map(branchDisplay));const saved=localStorage.getItem("che_branch_id");setBranchId(saved&&d.some(x=>x.id===saved)?saved:(d[0]?.id||""));});},[]);
  useEffect(()=>{if(branchId){localStorage.setItem("che_branch_id",branchId);setMenuLoading(true);fetch("/api/menu?branch_id="+branchId).then(r=>r.json()).then(setProducts).finally(()=>setMenuLoading(false));}},[branchId]);
  useEffect(()=>{if(modeReady)localStorage.setItem("che_order_type",mode)},[mode,modeReady]);
