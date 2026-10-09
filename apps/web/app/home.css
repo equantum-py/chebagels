@@ -254,3 +254,53 @@ body{font-family:var(--che-font)}
 .cheInnerLinks a:hover{color:#8f2428}
 @media(max-width:1000px){.cheInnerNav{gap:13px!important}.cheInnerLinks{gap:9px}.cheInnerLinks a{font-size:11px}}
 @media(max-width:760px){.store .shopHeader:has(.cheInnerNav){padding:0 12px;gap:8px}.cheInnerLinks{display:none}.cheInnerBack a{font-size:12px}}
+
+/* Shared public layout */
+.siteHeader{position:sticky;top:0;z-index:150;background:#fffaf0;box-shadow:0 2px 10px #28171512;font-family:Arial,Helvetica,sans-serif}
+.siteHeaderTop{height:62px;max-width:1320px;margin:auto;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.siteBrand img{width:66px;height:54px;object-fit:contain}
+.siteLinks{display:flex;gap:clamp(12px,2vw,30px);align-items:center}
+.siteLinks a{font-size:13px;font-weight:800;color:#321c18;text-decoration:none;white-space:nowrap}
+.siteLinks a:hover,.siteLinks a[aria-current="page"]{color:#8f2428}
+.siteHeaderActions{display:flex;gap:12px;align-items:center}
+.siteCart{border:0;border-radius:7px;background:#2b1714;color:white;font-size:13px;font-weight:800;padding:10px 15px;white-space:nowrap;cursor:pointer}
+.siteCart b{background:#e69c47;border-radius:50%;padding:4px 8px;margin-left:7px;color:#281715}
+.siteHeaderOrder{min-height:36px;background:#8f2428;color:white;display:flex;justify-content:center;align-items:center;gap:18px}
+.siteBranchButton{border:0;background:transparent;color:white;font-weight:800;cursor:pointer;font-size:12px}
+.siteBranchButton span{margin-left:5px}
+.siteOrderModes{display:flex;gap:4px;padding:3px;border-radius:20px;background:#fff3e325}
+.siteOrderModes button{border:0;background:transparent;color:white;padding:5px 15px;border-radius:18px;cursor:pointer;font-size:12px;font-weight:800}
+.siteOrderModes button.active{background:#fff8e9;color:#8f2428}
+.siteMobileToggle{display:none;background:none;border:0;color:#8f2428;font-size:24px;cursor:pointer}
+.siteMobileMenu{display:none}
+.siteModalBackdrop{position:fixed;inset:0;background:#2817159e;z-index:300;display:grid;place-items:center;padding:16px}
+.siteModal{position:relative;background:#fff9ed;padding:30px;width:min(100%,480px);max-height:85vh;overflow:auto;border-radius:12px}
+.siteModal h2{font-size:30px;margin:0 0 10px}.siteModal p{font-size:14px;color:#745e52}
+.siteModal>button:not(.siteModalClose){display:flex;flex-direction:column;width:100%;text-align:left;padding:13px 15px;margin:8px 0;background:white;border:1px solid #e6d5c4;cursor:pointer;border-radius:7px;color:#281715}
+.siteModal>button.selected{border-color:#8f2428}
+.siteModal>button small{margin-top:5px;color:#6e594d}
+.siteModal .siteModalClose{position:absolute;top:10px;right:15px;border:0;background:none;font-size:28px;cursor:pointer}
+.siteModal>button.siteModalDone{background:#8f2428;color:white;text-align:center;display:block;font-weight:800}
+.siteFooter{display:flex;justify-content:space-between;gap:30px;align-items:center;padding:35px max(24px,calc((100vw - 1180px)/2));background:#2b1714;color:#fff8ed}
+.siteFooter p{font-size:12px;color:#e0c4a9}.siteFooter nav{display:flex;gap:16px;flex-wrap:wrap}
+.siteFooter a{color:#fff8ed;font-size:12px;text-decoration:none;font-weight:700}
+.siteContent{max-width:1180px;min-height:55vh;margin:auto;padding:55px 24px 85px;background:#fff}
+.siteContent h1{font-size:clamp(36px,5vw,65px);line-height:1.08;letter-spacing:-1.5px;margin:18px 0}
+.siteContent>p{font-size:17px;max-width:720px;line-height:1.7;color:#6d5347}
+.siteEyebrow{color:#8f2428;font-size:12px;font-weight:900;letter-spacing:2px}
+.siteBack{display:inline-block;margin-bottom:30px;color:#8f2428;font-size:13px;text-decoration:none;font-weight:800}
+.siteContentPanel{margin-top:35px;padding:35px;border-radius:14px;background:#fff5e6;max-width:750px}
+.siteContentPanel a,.siteLocationGrid a,.siteContent>a{color:#8f2428;font-weight:800;text-decoration:none}
+.siteLocationGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:35px}
+.siteLocationGrid article{border:1px solid #e6d8c8;border-radius:12px;padding:26px;background:#fffaf3}
+.siteLocationGrid h2{font-size:22px;margin:0}.siteLocationGrid p{color:#685349;font-size:14px}
+.siteDisclaimer{font-size:12px!important;color:#806f63!important}
+.clubLandingHero{display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center;background:#fff5e6;border-radius:20px;padding:45px}
+.clubLandingHero h1{font-size:clamp(36px,4vw,62px)}.clubLandingHero p{font-size:17px;line-height:1.6}
+.clubLandingHero img{width:100%;max-height:400px;object-fit:contain;border-radius:15px}
+.clubLandingHero small{display:block;margin-top:20px;line-height:1.5;color:#745e52}
+.sitePrimaryButton{display:inline-block;background:#8f2428;color:white!important;border-radius:7px;padding:15px 20px;margin-top:15px;text-decoration:none;font-weight:800}
+.clubLandingSteps{margin:50px 0}.clubLandingSteps>div{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.clubLandingSteps article{background:#fff9f0;padding:25px;border-radius:12px}
+@media(max-width:850px){.siteLinks{gap:11px}.siteLinks a{font-size:11px}.siteHeaderTop{gap:8px}.siteLocationGrid{grid-template-columns:1fr}}
+@media(max-width:700px){.siteHeaderTop{height:62px;padding:0 13px}.siteLinks{display:none}.siteMobileToggle{display:block}.siteHeaderOrder{justify-content:space-between;padding:0 15px}.siteMobileMenu{display:flex;flex-direction:column;position:absolute;top:98px;right:0;left:0;background:#fffaf0;box-shadow:0 14px 20px #28171530;padding:12px 20px;max-height:calc(100dvh - 98px);overflow:auto}.siteMobileMenu a,.siteMobileMenu>button{display:block;border:0;background:transparent;color:#281715;text-decoration:none;font-size:16px;font-weight:800;padding:12px;text-align:left}.siteMobileModes{display:flex;gap:10px}.siteMobileModes button{background:#8f2428;color:white;border:0;border-radius:8px;padding:12px}.siteFooter{flex-direction:column;align-items:flex-start;padding:30px 22px}.siteContent{padding:35px 18px 60px}.clubLandingHero{grid-template-columns:1fr;padding:25px;gap:20px}.clubLandingSteps>div{grid-template-columns:1fr}.siteCart{font-size:11px;padding:9px}.siteBrand img{width:54px}.siteContentPanel{padding:24px}}
