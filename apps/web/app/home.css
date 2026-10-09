@@ -244,3 +244,13 @@ body{font-family:var(--che-font)}
 @media(max-width:1200px){.store .cheHeader{gap:10px;padding-left:20px;padding-right:20px}.chePrimaryNav{gap:12px!important}.chePrimaryNav a{font-size:12px}.cheOrderControls{gap:7px}.cheOrderControls .locationTrigger span{display:none}}
 @media(max-width:900px){.chePrimaryNav{display:none!important}.cheMobileNav{display:block;margin-left:4px}.cheMobileNav summary{list-style:none;cursor:pointer;font-size:23px;padding:7px 10px;color:#8f2428}.cheMobileNav summary::-webkit-details-marker{display:none}.cheMobileNav>div{position:absolute;right:0;top:100%;z-index:40;min-width:210px;background:#fffaf0;border:1px solid #e6d7c7;border-radius:12px;padding:10px;box-shadow:0 12px 28px #2b171426}.cheMobileNav a{display:block;padding:12px;color:#39221c;font-size:14px;font-weight:800;text-decoration:none}.cheMobileNav a:hover{background:#f7e9dc}.cheBranchCards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.store .cheHeader{gap:7px;padding:0 12px}.cheOrderControls{gap:5px}.cheOrderControls .locationTrigger{font-size:16px;padding:4px}.cheOrderControls .locationTrigger span{display:none}.cheOrderControls .fulfillment{font-size:11px}.cheOrderControls .cartBtn{font-size:11px;padding:9px 8px}.cheMobileNav{margin-left:0}.cheMobileNav summary{padding:4px;font-size:21px}.cheInfoSections{padding:0 15px;margin-top:20px}.cheInfoIntro{padding:30px 23px}.cheBranchCards{grid-template-columns:1fr;gap:10px}.cheBranchCards article{padding:19px}.cheBranchCards p{min-height:0}.cheInfoContact{margin-top:45px;padding:27px 23px;flex-direction:column;align-items:flex-start}.cheInfoBranches{margin-top:45px}}
+
+/* Persistent inner-page navigation, same destinations as home */
+.store .shopHeader:has(.cheInnerNav){display:flex;justify-content:space-between;gap:20px;padding-left:max(22px,calc((100vw - 1280px)/2));padding-right:max(22px,calc((100vw - 1280px)/2))}
+.cheInnerNav{display:flex;align-items:center;gap:28px!important;min-width:0}
+.cheInnerBack{white-space:nowrap}.cheInnerBack a{color:#8f2428;font-weight:800;font-size:13px;text-decoration:none}
+.cheInnerLinks{display:flex;gap:clamp(10px,1.6vw,25px);align-items:center;white-space:nowrap}
+.cheInnerLinks a{color:#39221c;text-decoration:none;font-weight:800;font-size:13px}
+.cheInnerLinks a:hover{color:#8f2428}
+@media(max-width:1000px){.cheInnerNav{gap:13px!important}.cheInnerLinks{gap:9px}.cheInnerLinks a{font-size:11px}}
+@media(max-width:760px){.store .shopHeader:has(.cheInnerNav){padding:0 12px;gap:8px}.cheInnerLinks{display:none}.cheInnerBack a{font-size:12px}}
