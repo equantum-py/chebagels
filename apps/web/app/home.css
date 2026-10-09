@@ -322,3 +322,14 @@ body{font-family:var(--che-font)}
 .quickCats{scroll-margin-top:110px}
 .homeCatalog .homeCategory{scroll-margin-top:125px}
 @media(max-width:700px){.homeCatalog .cards{gap:12px}.homeCatalog .foodPic{aspect-ratio:1/1}.homeCatalog .homeCategoryHead h2{font-size:25px}}
+
+/* CHE typography system — body Inter, headings Montserrat */
+html,body,button,input,select,textarea{font-family:var(--font-inter),Arial,sans-serif}
+body{font-weight:400}
+h1,h2,h3,h4,h5,h6,.siteLinks,.siteMobileMenu,.siteCart,.sitePrimaryButton,.foodAction strong{font-family:var(--font-montserrat),Arial,sans-serif}
+h1,h2{font-weight:700}h3,h4{font-weight:600}
+.siteLinks a,.siteCart,.sitePrimaryButton,.siteBranchButton,.siteOrderModes button{font-weight:600}
+.homeCatalog .homeCategoryHead h2,.homeCatalog .foodInfo h3,.siteContent h1{font-family:var(--font-montserrat),Arial,sans-serif;font-weight:700}
+.homeCatalog .foodAction strong{font-weight:700}
+.siteHeader,.siteContent,.siteFooter{font-family:var(--font-inter),Arial,sans-serif}
+.clubLandingHero h1{font-family:var(--font-montserrat),Arial,sans-serif}
