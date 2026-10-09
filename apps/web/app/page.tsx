@@ -54,7 +54,7 @@ export default function Home(){
  useEffect(()=>{if(!locationOpen)return;locationCloseRef.current?.focus();const onKey=(e:KeyboardEvent)=>{if(e.key==="Escape")setLocationOpen(false)};document.addEventListener("keydown",onKey);return()=>document.removeEventListener("keydown",onKey)},[locationOpen]);
  useEffect(()=>{const ids=["menu","home-boxes","home-bagels-calientes","home-bagels-frios","home-papas-fritas","home-ensaladas","home-bebidas"];const update=()=>{const y=window.scrollY+150;if(window.scrollY<Math.max(80,(document.getElementById("menu")?.offsetTop||0)-150)){setActiveCat("menu");return}let current="menu";for(const id of ids){const el=document.getElementById(id);if(el&&el.offsetTop<=y)current=id}if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-40)current=ids[ids.length-1];setActiveCat(current)};update();window.addEventListener("scroll",update,{passive:true});return()=>window.removeEventListener("scroll",update)},[products]);
  return <main className={cart>0?"store hasCart":"store"}>
-  <div className="promo">PEDÍ DIRECTO · DELIVERY Y RETIRO</div>
+  
   
   <a className="staticHero" href="#menu" aria-label="Ver menú de Che Bagels"><picture><source media="(max-width: 760px)" srcSet="/images/banners/che-hero-mobile.png"/><img onError={assetFallback} src="/images/banners/che-hero-desktop.png" alt="Che Bagels - Un poco de New York en Paraguay"/></picture></a>
   <section className="valueChips" aria-label="Por qué pedir en Che Bagels"><span>Bagels hechos a mano</span><span>Delivery o Retiro</span><span>Todo en un mismo pedido</span></section>
